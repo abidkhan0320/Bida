@@ -6,6 +6,9 @@ on:
     branches:
       - main
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -17,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install dependencies
         run: npm install
@@ -25,8 +28,9 @@ jobs:
       - name: Build Windows installer
         run: npm run build
 
-      - name: Upload EXE
-        uses: actions/upload-artifact@v4
-        with:
-          name: Pharmacy-Windows-Installer
-          path: dist/*.exe
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          $tag = "v1.0.${{ github.run_number }}"
+          gh release create $tag dist/*.exe --title "Pharmacy Management System $tag" --notes "Windows installer"
