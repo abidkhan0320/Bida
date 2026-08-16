@@ -1,0 +1,4133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Pharmacy Management System - 6 Month License</title>
+  <style>
+    /* ==================== GLOBAL STYLES ==================== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    
+    /* ==================== NAVIGATION BUTTONS ==================== */
+    .nav-buttons {
+      text-align: center;
+      margin-bottom: 30px;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .nav-buttons button {
+      padding: 12px 18px;
+      margin: 5px;
+      cursor: pointer;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      position: relative;
+      overflow: hidden;
+    }
+    
+    .nav-buttons button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+    }
+    
+    .nav-buttons button:active {
+      transform: translateY(0);
+    }
+    
+    .nav-buttons button::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+    
+    .nav-buttons button:hover::after {
+      width: 300px;
+      height: 300px;
+    }
+    
+    /* ==================== SECTION STYLES ==================== */
+    .section {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      margin: 20px auto;
+      max-width: 1400px;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      position: relative;
+      animation: slideIn 0.3s ease-out;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    
+    .close-btn {
+      position: absolute;
+      top: 10px;
+      right: 15px;
+      font-size: 28px;
+      cursor: pointer;
+      color: #f44336;
+      z-index: 10;
+      background: none;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .close-btn:hover {
+      background: #ffebee;
+      transform: rotate(90deg);
+    }
+    
+    /* ==================== INVOICE HEADER ==================== */
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 20px;
+      gap: 20px;
+      padding: 15px;
+      background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      border-radius: 8px;
+    }
+    
+    .invoice-title-container {
+      text-align: center;
+      flex-grow: 1;
+    }
+    
+    .invoice-title {
+      margin: 0;
+      font-size: 32px;
+      color: #4CAF50;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .company-info {
+      width: 35%;
+      display: flex;
+      gap: 15px;
+      align-items: flex-start;
+    }
+    
+    .customer-info {
+      width: 35%;
+      text-align: left;
+      background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+      padding: 14px;
+      border-radius: 8px;
+      border: 1px solid #90caf9;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .customer-field {
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .customer-field label {
+      font-weight: bold;
+      min-width: 65px;
+      color: #333;
+      font-size: 15px;
+    }
+    
+    .customer-field span {
+      border-bottom: 2px dashed #90caf9;
+      padding: 3px 8px;
+      min-width: 100px;
+      display: inline-block;
+      background: white;
+      font-size: 15px;
+      border-radius: 4px;
+      transition: all 0.3s;
+    }
+    
+    .customer-field span:focus {
+      border-bottom-color: #4CAF50;
+      background: #f8f9fa;
+      outline: none;
+    }
+    
+    .logo {
+      width: 80px;
+      height: 80px;
+      border: 2px dashed #4CAF50;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-radius: 10px;
+      overflow: hidden;
+      transition: all 0.3s;
+      background: #f8f9fa;
+    }
+    
+    .logo:hover {
+      border-color: #45a049;
+      background: #e8f5e9;
+    }
+    
+    .logo img {
+      max-width: 100%;
+      max-height: 100%;
+      display: none;
+    }
+    
+    .plus {
+      font-size: 24px;
+      color: #4CAF50;
+    }
+    
+    .info {
+      font-size: 15px;
+    }
+    
+    .info div {
+      margin-bottom: 5px;
+      padding: 2px 4px;
+      border-radius: 3px;
+    }
+    
+    .info div[contenteditable="true"]:focus {
+      background: #f0f8ff;
+      outline: 1px dashed #4CAF50;
+    }
+    
+    /* ==================== INVOICE TABLE ==================== */
+    .invoice-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 15px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .invoice-table th,
+    .invoice-table td {
+      border: 1px solid #ddd;
+      padding: 9px 10px;
+      text-align: center;
+      min-height: 32px;
+    }
+    
+    .invoice-table th {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      padding: 12px;
+      font-size: 14px;
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .invoice-table td[contenteditable="true"] {
+      background: #fffff0;
+      cursor: text;
+      min-width: 45px;
+      transition: all 0.3s;
+    }
+    
+    .invoice-table td[contenteditable="true"]:focus {
+      background: #fffde7;
+      outline: 3px solid #4CAF50;
+      outline-offset: -1px;
+      animation: pulse-focus 0.3s ease-in-out;
+    }
+    
+    @keyframes pulse-focus {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+    
+    .invoice-table tr:hover td {
+      background: #f5f5f5;
+    }
+    
+    .invoice-table tr:hover td[contenteditable="true"] {
+      background: #fffde7;
+    }
+    
+    /* ==================== SUMMARY CONTAINER ==================== */
+    .summary-container {
+      display: flex;
+      margin-top: 20px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .terms-box {
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid #4CAF50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .summary-box {
+      flex: 1;
+      min-width: 250px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      padding: 15px;
+      border-radius: 8px;
+      border-left: 5px solid #4CAF50;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    
+    .terms-box h3, .summary-box h3 {
+      margin-top: 0;
+      color: #333;
+      font-size: 17px;
+      border-bottom: 2px solid #4CAF50;
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+    
+    .summary-box .label {
+      font-weight: bold;
+      display: inline-block;
+      width: 160px;
+      font-size: 17px;
+    }
+    
+    .summary-box div {
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+    
+    /* ==================== SUGGESTION BOXES ==================== */
+    #customerSuggestions,
+    #productSuggestions {
+      position: absolute;
+      background: white;
+      border: 2px solid #4CAF50;
+      z-index: 10000;
+      width: 300px;
+      display: none;
+      max-height: 220px;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-radius: 6px;
+    }
+    
+    #customerSuggestions div,
+    #productSuggestions div {
+      padding: 12px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      font-size: 15px;
+      transition: all 0.2s;
+    }
+    
+    #customerSuggestions div:hover,
+    #productSuggestions div:hover,
+    #customerSuggestions div.highlighted,
+    #productSuggestions div.highlighted {
+      background-color: #4CAF50;
+      color: white;
+      padding-left: 20px;
+    }
+    
+    /* ==================== NOTIFICATIONS ==================== */
+    .batch-notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #2196F3;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      z-index: 10000;
+      display: none;
+      animation: slideIn 0.5s;
+      max-width: 450px;
+      font-size: 15px;
+    }
+    
+    .batch-notification.warning {
+      background: #ff9800;
+    }
+    
+    .batch-notification.success {
+      background: #4CAF50;
+    }
+    
+    @keyframes slideIn {
+      from { transform: translateX(100%); opacity: 0; }
+      to { transform: translateX(0); opacity: 1; }
+    }
+    
+    /* ==================== BATCH TABLE ==================== */
+    .batch-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 12px;
+    }
+    
+    .batch-table th,
+    .batch-table td {
+      border: 1px solid #ddd;
+      padding: 5px 8px;
+      text-align: center;
+    }
+    
+    .batch-table th {
+      background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+      color: white;
+    }
+    
+    .batch-stock-low {
+      background: #fff3e0;
+    }
+    
+    .batch-stock-out {
+      background: #ffebee;
+    }
+    
+    /* ==================== RECORDS SECTION ==================== */
+    .records-header-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    
+    .records-company-info {
+      width: 35%;
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      min-width: 250px;
+    }
+    
+    .records-title-container {
+      text-align: center;
+      flex-grow: 1;
+    }
+    
+    .records-title {
+      margin: 0;
+      font-size: 24px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    .records-logo {
+      width: 60px;
+      height: 60px;
+      border: 1px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      color: #aaa;
+      cursor: pointer;
+      overflow: hidden;
+      border-radius: 5px;
+    }
+    
+    .records-logo img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+    
+    .records-info div {
+      margin-bottom: 3px;
+      font-size: 11px;
+    }
+    
+    .search-box {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 6px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      width: 300px;
+      gap: 8px;
+    }
+    
+    .dual-search {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
+    }
+    
+    .dual-search input {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 11px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    
+    .date-pair {
+      display: flex;
+      justify-content: space-between;
+      width: 100%;
+      gap: 8px;
+    }
+    
+    .date-pair input[type="date"] {
+      flex: 1;
+      padding: 6px 10px;
+      font-size: 11px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    
+    .records-table-container {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-top: 15px;
+    }
+    
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10px;
+    }
+    
+    .records-table thead th {
+      position: sticky;
+      top: 0;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 8px;
+      text-align: left;
+      font-weight: bold;
+      border-bottom: 2px solid #ddd;
+      z-index: 5;
+    }
+    
+    .records-table td {
+      padding: 5px 6px;
+      border: 1px solid #eee;
+    }
+    
+    .returned-row {
+      background-color: #ffe0e0;
+    }
+    
+    .records-button {
+      padding: 5px 12px;
+      cursor: pointer;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 10px;
+      transition: all 0.3s;
+    }
+    
+    .records-button:hover {
+      background: #0056b3;
+      transform: scale(1.05);
+    }
+    
+    .btn-print-records {
+      background: #2196F3 !important;
+    }
+    
+    .btn-print-records:hover {
+      background: #1976D2 !important;
+    }
+    
+    .numeric-cell {
+      text-align: right;
+      font-family: 'Courier New', monospace;
+    }
+    
+    .records-summary {
+      margin-top: 15px;
+      padding: 15px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 8px;
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    
+    .summary-item {
+      background: white;
+      padding: 12px 20px;
+      border-radius: 6px;
+      text-align: center;
+      min-width: 120px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s;
+    }
+    
+    .summary-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+    
+    .summary-item .summary-label {
+      font-size: 10px;
+      color: #666;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+    
+    .summary-item .summary-value {
+      font-size: 18px;
+      font-weight: bold;
+      color: #333;
+    }
+    
+    /* ==================== PURCHASE SECTION ==================== */
+    .purchase-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .purchase-input {
+      padding: 10px 14px;
+      margin: 5px 0;
+      width: 100%;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+      box-sizing: border-box;
+      transition: all 0.3s;
+    }
+    
+    .purchase-input:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.1);
+    }
+    
+    .purchase-button {
+      padding: 12px 24px;
+      margin: 5px 0;
+      width: 100%;
+      border-radius: 5px;
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+    
+    .purchase-button:hover {
+      background: linear-gradient(135deg, #45a049 0%, #4CAF50 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    }
+    
+    .purchase-row {
+      display: flex;
+      gap: 10px;
+    }
+    
+    .purchase-row>* {
+      flex: 1;
+    }
+    
+    .purchase-table-container {
+      overflow-x: auto;
+      margin-top: 10px;
+      background: white;
+      border-radius: 10px;
+      border: 1px solid #ddd;
+      max-height: 400px;
+      overflow-y: auto;
+    }
+    
+    .purchase-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12px;
+      min-width: 800px;
+    }
+    
+    .purchase-table th {
+      background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+      color: white;
+      padding: 10px 8px;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    
+    .purchase-table td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    
+    .purchase-table tr:nth-child(even) {
+      background: #f9f9f9;
+    }
+    
+    .purchase-table tr:hover {
+      background: #f0f0f0;
+    }
+    
+    /* ==================== INVENTORY SECTION ==================== */
+    .inventory-box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 8px #ccc;
+      max-width: 1400px;
+      margin: auto;
+    }
+    
+    .inventory-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      align-items: flex-end;
+    }
+    
+    .inventory-row>input {
+      flex: 1;
+      min-width: 150px;
+      padding: 10px 14px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    
+    .inventory-row>button {
+      padding: 10px 24px;
+      margin: 5px 0;
+      border-radius: 5px;
+      border: none;
+      background: #4CAF50;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: bold;
+    }
+    
+    .inventory-totals-row {
+      background: #e8f5e9;
+      font-weight: bold;
+      font-size: 13px;
+    }
+    
+    .inventory-totals-row td {
+      border-top: 3px solid #4CAF50 !important;
+      padding: 10px 8px !important;
+    }
+    
+    .btn-group {
+      text-align: center;
+      margin-top: 20px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+    
+    .btn-group button {
+      padding: 13px 26px;
+      cursor: pointer;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    
+    .btn-group button:hover {
+      background: #45a049;
+    }
+    
+    .btn-print {
+      background: #2196F3 !important;
+      font-size: 17px !important;
+      padding: 15px 32px !important;
+    }
+    
+    .btn-print:hover {
+      background: #1976D2 !important;
+    }
+    
+    .inv-no-input {
+      width: 95px;
+      text-align: center;
+      border: 2px solid #4CAF50;
+      border-radius: 4px;
+      padding: 7px;
+      font-size: 18px;
+      font-weight: bold;
+    }
+    
+    .storage-info {
+      position: fixed;
+      bottom: 15px;
+      left: 15px;
+      background: #333;
+      color: #fff;
+      padding: 10px 20px;
+      border-radius: 25px;
+      font-size: 12px;
+      z-index: 9999;
+      opacity: 0.9;
+    }
+    
+    .purchase-suggestion-box {
+      position: absolute;
+      background: white;
+      border: 2px solid #4CAF50;
+      z-index: 10000;
+      width: 100%;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border-radius: 6px;
+    }
+    
+    .purchase-suggestion-box div {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    
+    .purchase-suggestion-box div:hover {
+      background-color: #4CAF50;
+      color: white;
+    }
+    
+    .inventory-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 11px;
+    }
+    
+    .inventory-table th,
+    .inventory-table td {
+      border: 1px solid #ddd;
+      padding: 6px 8px;
+      text-align: center;
+    }
+    
+    .inventory-table th {
+      background-color: #4CAF50;
+      color: white;
+      padding: 8px;
+      font-size: 10px;
+      font-weight: bold;
+      position: sticky;
+      top: 0;
+      z-index: 2;
+    }
+    
+    .inventory-table-wrapper {
+      max-height: 500px;
+      overflow-y: auto;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    
+    .open-qty-cell {
+      background: #e3f2fd;
+      font-weight: bold;
+    }
+    
+    .available-qty-cell {
+      background: #c8e6c9;
+      font-weight: bold;
+    }
+    
+    .return-btn {
+      background: #ff9800 !important;
+    }
+    
+    .return-btn:hover {
+      background: #f57c00 !important;
+    }
+    
+    .company-return-btn {
+      background: #9c27b0 !important;
+    }
+    
+    .company-return-btn:hover {
+      background: #7b1fa2 !important;
+    }
+    
+    .company-return-container {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      max-width: 800px;
+      margin: 0 auto 20px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .company-return-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 15px;
+      align-items: flex-end;
+    }
+    
+    .company-return-row > * {
+      flex: 1;
+    }
+    
+    .company-return-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 13px;
+    }
+    
+    .company-return-table th,
+    .company-return-table td {
+      border: 1px solid #ddd;
+      padding: 8px 10px;
+      text-align: center;
+    }
+    
+    .company-return-table th {
+      background-color: #9c27b0;
+      color: white;
+      font-weight: bold;
+    }
+    
+    .company-return-suggestion-box {
+      position: absolute;
+      background: white;
+      border: 2px solid #9c27b0;
+      z-index: 10000;
+      width: 100%;
+      display: none;
+      max-height: 200px;
+      overflow-y: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      border-radius: 6px;
+    }
+    
+    .company-return-suggestion-box div {
+      padding: 10px 14px;
+      cursor: pointer;
+      border-bottom: 1px solid #eee;
+      font-size: 14px;
+    }
+    
+    .company-return-suggestion-box div:hover {
+      background-color: #9c27b0;
+      color: white;
+    }
+    
+    .btn-company-return {
+      background: #9c27b0 !important;
+    }
+    
+    .btn-company-return:hover {
+      background: #7b1fa2 !important;
+    }
+    
+    .btn-print-company-return {
+      background: #2196F3 !important;
+    }
+    
+    .btn-print-company-return:hover {
+      background: #1976D2 !important;
+    }
+    
+    .btn-thermal-company-return {
+      background: #ff9800 !important;
+    }
+    
+    .btn-thermal-company-return:hover {
+      background: #f57c00 !important;
+    }
+    
+    /* ==================== PRINT OPTIONS ==================== */
+    .print-options-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    .btn-print-main {
+      background: #2196F3 !important;
+      font-size: 17px !important;
+      padding: 15px 32px !important;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    .btn-print-main:hover {
+      background: #1976D2 !important;
+    }
+    
+    .dropdown-arrow {
+      font-size: 12px;
+      transition: transform 0.3s;
+    }
+    
+    .dropdown-arrow.open {
+      transform: rotate(180deg);
+    }
+    
+    .print-dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: white;
+      border: 2px solid #2196F3;
+      border-top: none;
+      border-radius: 0 0 8px 8px;
+      z-index: 1000;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      display: none;
+      overflow: hidden;
+    }
+    
+    .print-dropdown-menu.show {
+      display: block;
+    }
+    
+    .print-option-item {
+      display: flex;
+      align-items: center;
+      padding: 12px 16px;
+      cursor: pointer;
+      transition: background 0.2s;
+      border-bottom: 1px solid #e0e0e0;
+      font-size: 14px;
+      color: #333;
+    }
+    
+    .print-option-item:last-child {
+      border-bottom: none;
+    }
+    
+    .print-option-item:hover {
+      background: #e3f2fd;
+    }
+    
+    .print-option-item.selected {
+      background: #bbdefb;
+    }
+    
+    .radio-circle {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid #2196F3;
+      margin-right: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+    
+    .radio-circle.checked {
+      border-color: #2196F3;
+    }
+    
+    .radio-circle.checked::after {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #2196F3;
+      animation: radioCheck 0.2s ease;
+    }
+    
+    @keyframes radioCheck {
+      from { transform: scale(0); }
+      to { transform: scale(1); }
+    }
+    
+    .option-details {
+      flex-grow: 1;
+    }
+    
+    .option-title {
+      font-weight: bold;
+      font-size: 14px;
+    }
+    
+    .option-desc {
+      font-size: 11px;
+      color: #666;
+      margin-top: 2px;
+    }
+    
+    .dropdown-footer {
+      padding: 8px 16px;
+      background: #f5f5f5;
+      font-size: 11px;
+      color: #666;
+      text-align: center;
+      border-top: 1px solid #e0e0e0;
+    }
+    
+    .selected-indicator {
+      font-size: 11px;
+      color: #1976D2;
+      margin-top: 4px;
+      text-align: center;
+      font-weight: bold;
+    }
+    
+    /* ==================== LICENSE OVERLAY ==================== */
+    #licenseOverlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 99999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #licenseOverlay.hidden {
+      display: none;
+    }
+    
+    .license-box {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+    }
+    
+    .license-box h2 {
+      color: #4CAF50;
+      margin-bottom: 10px;
+    }
+    
+    .license-box p {
+      color: #666;
+      margin-bottom: 20px;
+      font-size: 14px;
+    }
+    
+    .license-box input {
+      padding: 12px 16px;
+      width: 100%;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+      margin-bottom: 15px;
+    }
+    
+    .license-box input:focus {
+      border-color: #4CAF50;
+      outline: none;
+    }
+    
+    .license-box button {
+      padding: 12px 30px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .license-box button:hover {
+      background: #45a049;
+    }
+    
+    .license-box .error-msg {
+      color: #f44336;
+      font-size: 13px;
+      margin-top: 10px;
+      display: none;
+    }
+    
+    .license-box .info-msg {
+      color: #2196F3;
+      font-size: 13px;
+      margin-top: 10px;
+    }
+    
+    .license-status {
+      background: #ff9800;
+      color: white;
+      padding: 5px 12px;
+      border-radius: 12px;
+      font-size: 11px;
+      display: inline-block;
+      margin-left: 10px;
+    }
+    
+    .license-status.valid {
+      background: #4CAF50;
+    }
+    
+    .license-status.expired {
+      background: #f44336;
+    }
+    
+    /* ==================== THERMAL PRINT ==================== */
+    .thermal-print-content {
+      font-family: 'Arial Black', Arial, sans-serif;
+      font-size: 16px;
+      font-weight: bold;
+      width: 80mm;
+      padding: 5px;
+      line-height: 1.5;
+      color: #000;
+      background: #fff;
+    }
+    
+    .thermal-print-content table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    
+    .thermal-print-content td, .thermal-print-content th {
+      padding: 2px 4px;
+      border: 1px solid #000;
+      text-align: center;
+      font-size: 14px;
+    }
+    
+    .thermal-print-content .dashed {
+      border-top: 2px dashed #000;
+      margin: 4px 0;
+    }
+    
+    .thermal-print-content .center { text-align: center; }
+    .thermal-print-content .right { text-align: right; }
+    .thermal-print-content .bold { font-weight: bold; }
+    .thermal-print-content .small { font-size: 12px; }
+    
+    /* ==================== ARROW NAVIGATION HINT ==================== */
+    .arrow-navigation-hint {
+      position: fixed;
+      bottom: 60px;
+      right: 15px;
+      background: #333;
+      color: white;
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 11px;
+      opacity: 0.7;
+      z-index: 9998;
+      pointer-events: none;
+    }
+    
+    /* ==================== PRINT STYLES ==================== */
+    @media print {
+      body { padding: 0; margin: 0; background: white; }
+      body * { visibility: hidden; }
+      #invoiceSection, #invoiceSection * { visibility: visible; }
+      #invoiceSection {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        max-width: 100%;
+        margin: 0 !important;
+        padding: 8mm 10mm;
+        box-shadow: none;
+        display: block !important;
+        border-radius: 0;
+      }
+      #invoiceSection .close-btn,
+      #invoiceSection .btn-group,
+      #invoiceSection button,
+      #productSuggestions,
+      #customerSuggestions,
+      .batch-notification,
+      .storage-info,
+      .nav-buttons,
+      .print-dropdown-menu,
+      .selected-indicator,
+      .arrow-navigation-hint {
+        display: none !important;
+      }
+      .invoice-table { font-size: 16px !important; }
+      .invoice-table td,
+      .invoice-table th {
+        padding: 9px 10px !important;
+        font-size: 15px !important;
+      }
+      .invoice-table td[contenteditable="true"] {
+        background: white !important;
+        outline: none !important;
+      }
+      .summary-box .label { font-size: 17px !important; }
+      .summary-box div { font-size: 17px !important; }
+      .customer-field span { font-size: 16px !important; }
+      .invoice-title { font-size: 30px !important; }
+      .invoice-header { margin-bottom: 5px; }
+      .summary-container { page-break-inside: avoid; margin-top: 10px; }
+      @page { margin: 3mm; size: auto; }
+    }
+    
+    @media print {
+      #recordsPrintArea, #recordsPrintArea * { visibility: visible; }
+      #recordsPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+    
+    @media print {
+      #inventoryPrintArea, #inventoryPrintArea * { visibility: visible; }
+      #inventoryPrintArea { position: absolute; left: 0; top: 0; width: 100%; }
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+
+<!-- LICENSE OVERLAY -->
+<div id="licenseOverlay">
+  <div class="license-box">
+    <h2>🔑 License Verification</h2>
+    <p>Enter the license key to continue using the system.<br>
+    <strong>License Period:</strong> 6 Months (Jan-Jun or Jul-Dec)</p>
+    <input type="text" id="licenseKeyInput" placeholder="Enter License Key" maxlength="20">
+    <button onclick="verifyLicense()">✅ Verify</button>
+    <div id="licenseError" class="error-msg">Invalid license key. Please try again.</div>
+    <div id="licenseInfo" class="info-msg"></div>
+  </div>
+</div>
+
+<div class="nav-buttons" id="navButtons">
+  <button onclick="openInvoice()">📄 Invoice</button>
+  <button onclick="openRecords()">📊 Sales Records</button>
+  <button onclick="openPurchase()">🛒 Purchase</button>
+  <button onclick="openCustomer()">👤 Customer</button>
+  <button onclick="openInventory()">📦 Inventory</button>
+  <button onclick="openBatchStock()">📋 Batch Stock</button>
+  <button onclick="openCompanyReturn()" style="background:#9c27b0;">🔄 Company Return</button>
+  <span id="licenseStatusBadge" class="license-status">🔑 License</span>
+</div>
+
+<div class="storage-info" id="storageInfo">💾 Permanent Storage | Data: <span id="dataCount">0</span> items</div>
+<div id="batchNotification" class="batch-notification"></div>
+<div class="arrow-navigation-hint">⌨️ Arrow Keys: ↑↓←→ Navigate | Enter: Next Cell | ESC: Close</div>
+
+<!-- INVOICE SECTION -->
+<div class="section invoice" id="invoiceSection">
+  <button class="close-btn" onclick="closeInvoice()" title="ESC to close">❌</button>
+  <div class="invoice-header">
+    <div class="company-info">
+      <div class="logo" onclick="document.getElementById('uploadLogo').click()">
+        <img id="logoImg" src="">
+        <div id="plusIcon" class="plus">+</div>
+      </div>
+      <div class="info">
+        <div><strong contenteditable="true">QASIR MEDICOSE</strong></div>
+        <div contenteditable="true">SHENE KALY DARRA</div>
+        <div contenteditable="true">ADAM KHIL CITY, PAKISTAN</div>
+        <div contenteditable="true">Phone: 0318-9776178</div>
+      </div>
+    </div>
+    <div class="invoice-title-container">
+      <h1 class="invoice-title">INVOICE</h1>
+      <div class="invoice-meta">
+        <div><strong>Invoice #:</strong> <input type="text" id="invNo" class="inv-no-input" value="1" onchange="handleInvoiceNumberChange(this.value)" onkeydown="handleInvNoKeyDown(event)"></div>
+        <div><strong>Date:</strong> <span id="invDate"></span></div>
+      </div>
+    </div>
+    <div class="customer-info">
+      <h3 style="margin-top:0;color:#4CAF50;font-size:17px;">Customer Details</h3>
+      <div class="customer-field">
+        <label>ID:</label>
+        <span contenteditable="true" id="custId" oninput="handleCustomerIdInputInline(this)" onkeydown="handleCustomerIdKeyDown(event, this)"></span>
+      </div>
+      <div id="customerSuggestions"></div>
+      <div class="customer-field">
+        <label>Name:</label>
+        <span contenteditable="true" id="custName"></span>
+      </div>
+      <div class="customer-field">
+        <label>Address:</label>
+        <span contenteditable="true" id="custCity"></span>
+      </div>
+      <div class="customer-field">
+        <label>Phone:</label>
+        <span contenteditable="true" id="custPhone"></span>
+      </div>
+    </div>
+  </div>
+  
+  <table class="invoice-table">
+    <thead>
+      <tr>
+        <th>No</th>
+        <th>Code</th>
+        <th>Item</th>
+        <th>Qty</th>
+        <th>Rate</th>
+        <th>Batch</th>
+        <th>Disc (%)</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="productTable"></tbody>
+  </table>
+  
+  <div id="productSuggestions"></div>
+  
+  <div class="summary-container">
+    <div class="terms-box">
+      <h3>Terms & Conditions</h3>
+      <div class="terms-content" contenteditable="true">
+        1. Goods once sold will not be taken back.<br>
+        2. All disputes are subject to jurisdiction of Health City courts.<br>
+        3. Payment due within 15 days of invoice date.<br>
+        4. Medicines cannot be returned once dispensed.<br>
+        5. Please check expiry dates before purchasing.
+      </div>
+    </div>
+    <div class="summary-box">
+      <div><span class="label">Sub Total: </span><span id="subTotalAmount">0</span></div>
+      <div><span class="label">Total Amount: </span><span id="totalAmount">0</span></div>
+      <div><span class="label">Paid Amount: </span><span contenteditable="true" id="paidAmount" oninput="updateRemaining()" onkeydown="handlePaidAmountInput(event)"></span></div>
+      <div><span class="label">Remaining Balance: </span><span id="remainingBalance">0</span></div>
+    </div>
+  </div>
+  
+  <div class="btn-group">
+    <div class="print-options-wrapper">
+      <button class="btn-print-main" id="btnPrintSave" onclick="togglePrintDropdown()">
+        🖨️ Print/Save (F4) <span class="dropdown-arrow" id="dropdownArrow">▼</span>
+      </button>
+      <div class="print-dropdown-menu" id="printDropdown">
+        <div class="print-option-item selected" id="thermalPrintOption" onclick="selectPrintOption('thermal')">
+          <div class="radio-circle checked"></div>
+          <div class="option-details">
+            <div class="option-title">🧾 Thermal Print</div>
+            <div class="option-desc">80mm receipt format</div>
+          </div>
+        </div>
+        <div class="print-option-item" id="a4PrintOption" onclick="selectPrintOption('a4')">
+          <div class="radio-circle"></div>
+          <div class="option-details">
+            <div class="option-title">📄 A4 Print</div>
+            <div class="option-desc">Full page format</div>
+          </div>
+        </div>
+        <div class="dropdown-footer">Press F4 or click button to print with selected option</div>
+      </div>
+      <div class="selected-indicator" id="selectedIndicator">Selected: 🧾 Thermal Print</div>
+    </div>
+    <button onclick="generateInvoicePDF()">📄 Invoice PDF</button>
+    <button onclick="saveInvoice()">💾 Save Invoice</button>
+    <button onclick="clearInvoice()">🧹 Clear (F12)</button>
+  </div>
+</div>
+
+<!-- RECORDS SECTION -->
+<div class="section records-section" id="recordsSection">
+  <button class="close-btn" onclick="closeRecords()" title="ESC to close">❌</button>
+  <div id="recordsPrintArea">
+    <div class="records-title-container">
+      <h1 class="records-title">SALES RECORDS</h1>
+    </div>
+    <div class="records-header-container">
+      <div class="records-company-info">
+        <div class="records-logo" id="recordsLogo" onclick="document.getElementById('logoInput').click()">
+          <span id="plusSign">+</span>
+          <img id="recordsLogoImg" src="" style="display:none;">
+          <input type="file" id="logoInput" accept="image/*" style="display:none;">
+        </div>
+        <div class="records-info">
+          <div><strong contenteditable="true" id="recordsCompanyName">QASIR MEDICOS</strong></div>
+          <div contenteditable="true" id="recordsCompanyAddress">SHENI KALY DARRA</div>
+          <div contenteditable="true" id="recordsCompanyCity">ADAM KHIL, Pakistan</div>
+          <div><strong>Phone:</strong> <span contenteditable="true" id="recordsCompanyPhone">0320-9094917</span></div>
+          <div><strong>Generated On:</strong> <span id="recordsDate"></span></div>
+        </div>
+      </div>
+      <div class="search-box">
+        <div class="dual-search">
+          <input type="text" id="mainSearch" placeholder="Search Product, City, Customer, Invoice..." oninput="filterRecords()">
+          <input type="text" id="companySearch" placeholder="Search Company..." oninput="filterCompany()">
+        </div>
+        <div class="date-pair">
+          <input type="date" id="openingDate" onchange="filterByDate()">
+          <input type="date" id="closingDate" onchange="filterByDate()">
+        </div>
+      </div>
+    </div>
+    <div class="records-table-container">
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th style="width:25px;">No</th>
+            <th style="width:60px;">Date</th>
+            <th style="width:50px;">Invoice</th>
+            <th style="width:80px;">Product</th>
+            <th style="width:30px;">Qty</th>
+            <th style="width:50px;">Batch</th>
+            <th style="width:40px;">Rate</th>
+            <th style="width:50px;">Total</th>
+            <th style="width:30px;">Return</th>
+            <th style="width:60px;">Return Date</th>
+            <th style="width:70px;">Customer</th>
+            <th style="width:70px;">City</th>
+            <th style="width:50px;">Paid</th>
+            <th style="width:60px;">Remaining</th>
+            <th style="width:60px;">Action</th>
+          </tr>
+        </thead>
+        <tbody id="recordsTable"></tbody>
+      </table>
+    </div>
+    <div class="records-summary" id="recordsSummary">
+      <div class="summary-item sub-total">
+        <div class="summary-label">📊 Sub Total</div>
+        <div class="summary-value" id="recSubTotalAmount">Rs. 0</div>
+      </div>
+      <div class="summary-item paid-total">
+        <div class="summary-label">💰 Paid Total</div>
+        <div class="summary-value" id="paidTotalAmount">Rs. 0</div>
+      </div>
+      <div class="summary-item remaining-total">
+        <div class="summary-label">⏳ Remaining Total</div>
+        <div class="summary-value" id="remainingTotalAmount">Rs. 0</div>
+      </div>
+      <div class="summary-item return-total">
+        <div class="summary-label">🔄 Return Total</div>
+        <div class="summary-value" id="returnTotalAmount">Rs. 0</div>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:10px;">
+    <button onclick="generateRecordsPDF()" class="records-button" style="font-size:13px;padding:10px 24px;">📄 PDF</button>
+    <button onclick="printRecords()" class="records-button btn-print-records" style="font-size:13px;padding:10px 24px;">🖨️ Print Records</button>
+  </div>
+</div>
+
+<!-- PURCHASE SECTION -->
+<div class="section purchase-section" id="purchaseSection">
+  <button class="close-btn" onclick="closePurchase()" title="ESC to close">❌</button>
+  <div class="purchase-container">
+    <h2>🛒 Purchase Entry</h2>
+    <div style="position:relative;">
+      <input type="text" id="purchaseProduct" class="purchase-input" placeholder="Product Name (type 2-3 letters)" oninput="autoFillPurchaseCode(); showPurchaseSuggestions()" autocomplete="off">
+      <div id="purchaseSuggestionBox" class="purchase-suggestion-box"></div>
+    </div>
+    <input type="text" id="purchaseCode" class="purchase-input" placeholder="Product Code" readonly>
+    <div class="purchase-row">
+      <input type="number" id="purchaseQty" class="purchase-input" placeholder="Quantity" oninput="updatePurchaseTotal()">
+      <input type="number" id="purchaseRate" class="purchase-input" placeholder="Selling Rate" oninput="updatePurchaseTotal()">
+    </div>
+    <div id="purchaseTotalBox" style="font-weight:bold;background:#e6f7ff;padding:12px;border:1px solid #87ceeb;border-radius:5px;margin-top:10px;font-size:16px;">Total Amount: Rs. 0</div>
+    <input type="number" id="purchaseBuy" class="purchase-input" placeholder="Purchase Price (Buy Rate)">
+    <input type="text" id="purchaseCompany" class="purchase-input" placeholder="Company Name (auto-fill)">
+    <input type="text" id="purchaseBatch" class="purchase-input" placeholder="Batch Number (auto-fill)">
+    <input type="date" id="purchaseExpiry" class="purchase-input" placeholder="Expiry Date">
+    <button onclick="savePurchaseData()" class="purchase-button">💾 Save Purchase</button>
+  </div>
+  <div class="search-container" style="margin-top:20px;">
+    <h3>🔍 Purchase Search</h3>
+    <input type="text" id="purchaseSearch" class="purchase-input" placeholder="Search by Product, Company, Code or Date" oninput="filterPurchaseData()">
+    <input type="number" id="purchaseExpiryFilter" class="purchase-input" placeholder="Show Expiry within (months)" oninput="filterPurchaseData()">
+  </div>
+  <div class="purchase-table-container">
+    <table class="purchase-table">
+      <thead>
+        <tr>
+          <th>No</th><th>Code</th><th>Product</th><th>Qty</th><th>Sell Rate</th>
+          <th>Total</th><th>Buy Rate</th><th>Company</th><th>Batch</th><th>Expiry</th><th>Date</th>
+        </tr>
+      </thead>
+      <tbody id="purchaseTableBody"></tbody>
+    </table>
+  </div>
+  <div style="text-align:center;margin-top:15px;">
+    <button onclick="printPurchaseA4()" class="purchase-button btn-print">🖨️ Print Purchase (A4)</button>
+    <button onclick="generatePurchasePDF()" class="purchase-button" style="background:#2196F3;">📄 Purchase PDF</button>
+  </div>
+</div>
+
+<!-- CUSTOMER SECTION -->
+<div class="section" id="customerSection">
+  <button class="close-btn" onclick="closeCustomer()" title="ESC to close">❌</button>
+  <h2 style="text-align:center;">👤 Customer Management</h2>
+  <div class="customer-form" style="max-width:600px;margin:auto;">
+    <label>Customer ID: <span id="autoCustId">001</span></label><br><br>
+    <input type="text" id="custInputName" class="purchase-input" placeholder="Customer Name"><br><br>
+    <input type="text" id="custInputCity" class="purchase-input" placeholder="City"><br><br>
+    <input type="text" id="custInputPhone" class="purchase-input" placeholder="Phone"><br><br>
+    <button onclick="saveCustomer()" class="purchase-button">💾 Save Customer</button><br><br>
+    <input type="text" id="searchCustomer" class="purchase-input" oninput="searchCustomers()" placeholder="🔍 Search by Name, City, Phone, ID or Alphabet">
+  </div>
+  <table id="customerTable" style="width:100%;margin:20px auto;border-collapse:collapse;font-size:13px;">
+    <thead><tr><th>ID</th><th>Name</th><th>City</th><th>Phone</th></tr></thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- INVENTORY SECTION -->
+<div class="section" id="inventorySection">
+  <button class="close-btn" onclick="closeInventory()" title="ESC to close">❌</button>
+  <div id="inventoryPrintArea">
+    <div class="inventory-box">
+      <h2>📦 Inventory Summary</h2>
+      <div class="inventory-row">
+        <input type="text" id="searchTerm" placeholder="Product or Company (optional)" oninput="calculateInventory()">
+        <input type="date" id="startDate" onchange="calculateInventory()">
+        <input type="date" id="closingDateInv" onchange="calculateInventory()">
+        <button onclick="calculateInventory()">🔍 Search</button>
+      </div>
+      <div class="inventory-table-wrapper">
+        <table class="inventory-table" id="inventoryTable">
+          <thead>
+            <tr>
+              <th>No</th>
+              <th>Product</th>
+              <th>Company</th>
+              <th>Buy Rate</th>
+              <th>Current Price</th>
+              <th>Open Qty</th>
+              <th>Total Purchase</th>
+              <th>Total Sale Qty</th>
+              <th>Total Sale Amount</th>
+              <th>Customer Returns</th>
+              <th>Company Returns</th>
+              <th>Available Qty</th>
+            </tr>
+          </thead>
+          <tbody id="inventoryBody"></tbody>
+          <tfoot id="inventoryFooter"></tfoot>
+        </table>
+      </div>
+    </div>
+  </div>
+  <div style="text-align:center;margin-top:10px;display:flex;gap:10px;justify-content:center;">
+    <button onclick="generateInventoryPDF()" class="records-button" style="font-size:13px;padding:10px 24px;">📄 Inventory PDF</button>
+    <button onclick="printInventory()" class="records-button btn-print-records" style="font-size:13px;padding:10px 24px;">🖨️ Print Inventory</button>
+  </div>
+</div>
+
+<!-- BATCH STOCK SECTION -->
+<div class="section" id="batchStockSection">
+  <button class="close-btn" onclick="closeBatchStock()" title="ESC to close">❌</button>
+  <div class="inventory-box">
+    <h2>📋 Batch-wise Stock Management</h2>
+    <div class="inventory-row">
+      <input type="text" id="batchSearchTerm" placeholder="Search Product..." oninput="displayBatchStock()">
+      <button onclick="displayBatchStock()">🔍 Refresh</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="batch-table" id="batchStockTable">
+        <thead>
+          <tr>
+            <th>Product</th><th>Batch</th><th>Rate</th><th>Purchase Qty</th>
+            <th>Sold Qty</th><th>Available</th><th>Expiry</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="batchStockBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- COMPANY RETURN SECTION -->
+<div class="section" id="companyReturnSection">
+  <button class="close-btn" onclick="closeCompanyReturn()" title="ESC to close">❌</button>
+  <div class="company-return-container">
+    <h2>🔄 Company Return Management</h2>
+    <div style="margin-bottom:20px;">
+      <label><strong>Date:</strong></label>
+      <input type="date" id="companyReturnDate" class="purchase-input" style="width:200px;">
+    </div>
+    <div style="position:relative;">
+      <input type="text" id="companyReturnProduct" class="purchase-input" 
+             placeholder="Product Name (type 2-3 letters)" 
+             oninput="showCompanyReturnSuggestions()" autocomplete="off">
+      <div id="companyReturnSuggestionBox" class="company-return-suggestion-box"></div>
+    </div>
+    <div class="company-return-row">
+      <input type="number" id="companyReturnRate" class="purchase-input" 
+             placeholder="Rate" oninput="updateCompanyReturnTotal()">
+      <input type="number" id="companyReturnQty" class="purchase-input" 
+             placeholder="Quantity" oninput="updateCompanyReturnTotal()">
+    </div>
+    <div id="companyReturnTotalBox" style="font-weight:bold;background:#f3e5f5;padding:12px;
+         border:1px solid #9c27b0;border-radius:5px;margin:10px 0;font-size:16px;">
+      Total Amount: Rs. 0
+    </div>
+    <div style="display:flex;gap:10px;margin-top:15px;">
+      <button onclick="saveCompanyReturn()" class="purchase-button btn-company-return">💾 Save Return</button>
+      <button onclick="printCompanyReturnA4()" class="purchase-button btn-print-company-return">🖨️ A4 Print</button>
+      <button onclick="thermalPrintCompanyReturn()" class="purchase-button btn-thermal-company-return">🧾 Thermal Print</button>
+    </div>
+    <div style="margin-top:30px;">
+      <h3>📋 Saved Returns</h3>
+      <input type="text" id="companyReturnSearch" class="purchase-input" 
+             placeholder="🔍 Search by Product or Date" oninput="filterCompanyReturns()">
+      <div style="max-height:400px;overflow-y:auto;margin-top:10px;">
+        <table class="company-return-table">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Product</th>
+              <th>Rate</th>
+              <th>Qty</th>
+              <th>Total</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="companyReturnTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Thermal Print Content (Hidden) -->
+<div id="thermalPrintContent" style="display:none;">
+  <div class="thermal-print-content" id="thermalContent">
+    <div class="center bold" style="font-size:17px;" id="thermalCompanyName">MEDLIFE PHARMACY</div>
+    <div class="center" id="thermalCompanyAddress">123 Medical Street, City</div>
+    <div class="center">Phone: <span id="thermalCompanyPhone">0300-1234567</span></div>
+    <div class="dashed"></div>
+    <div>
+      <span class="bold">Invoice #: </span><span id="thermalInvNo"></span><br>
+      <span class="bold">Date: </span><span id="thermalInvDate"></span><br>
+      <span class="bold">Customer: </span><span id="thermalCustomerName"></span><br>
+      <span class="bold">Phone: </span><span id="thermalCustomerPhone"></span>
+    </div>
+    <div class="dashed"></div>
+    <table>
+      <thead>
+        <tr>
+          <th>No</th>
+          <th style="width:50%;">Item</th>
+          <th style="width:10%;">Qty</th>
+          <th style="width:15%;" class="right">Rate</th>
+          <th style="width:10%;" class="right">Disc</th>
+          <th style="width:15%;" class="right">Total</th>
+        </tr>
+      </thead>
+      <tbody id="thermalProducts"></tbody>
+    </table>
+    <div class="dashed"></div>
+    <div>
+      <span class="bold">Total Amount: </span><span id="thermalTotalAmount" class="right" style="float:right;">0</span><br>
+      <span class="bold">Paid Amount: </span><span id="thermalPaidAmount" class="right" style="float:right;">0</span><br>
+      <span class="bold">Balance: </span><span id="thermalBalance" class="right" style="float:right;">0</span>
+    </div>
+    <div class="dashed"></div>
+    <div class="center">Thank you for your purchase!</div>
+    <div class="dashed"></div>
+    <div class="small">
+      <span class="bold">Terms:</span> Goods once sold not returnable<br>
+      Check items at time of purchase
+    </div>
+  </div>
+</div>
+
+<input type="file" id="uploadLogo" accept="image/*" style="display:none;">
+
+<script>
+const { jsPDF } = window.jspdf;
+
+// ==================== LICENSE SYSTEM (6-MONTH VALIDITY) ====================
+let licenseValid = false;
+let licenseExpiryDate = null;
+
+function generateLicenseKey() {
+  const now = new Date();
+  const month = now.getMonth() + 1;
+  const year = now.getFullYear();
+  const period = month <= 6 ? 1 : 2;
+  const periodYear = year;
+  const dateStr = String(period) + String(periodYear);
+  const num = parseInt(dateStr);
+  const step1 = num * 3;
+  const step2 = step1 + 12345;
+  return String(step2);
+}
+
+function getLicenseExpiry() {
+  const now = new Date();
+  if (now.getMonth() <= 5) {
+    return new Date(now.getFullYear(), 5, 30);
+  } else {
+    return new Date(now.getFullYear(), 11, 31);
+  }
+}
+
+function checkLicense() {
+  const savedKey = localStorage.getItem('pharmacyLicenseKey');
+  const savedExpiry = localStorage.getItem('pharmacyLicenseExpiry');
+  if (!savedKey || !savedExpiry) return false;
+  const expiry = new Date(savedExpiry);
+  const today = new Date();
+  if (today > expiry) {
+    localStorage.removeItem('pharmacyLicenseKey');
+    localStorage.removeItem('pharmacyLicenseExpiry');
+    return false;
+  }
+  const currentKey = generateLicenseKey();
+  if (savedKey !== currentKey) {
+    localStorage.removeItem('pharmacyLicenseKey');
+    localStorage.removeItem('pharmacyLicenseExpiry');
+    return false;
+  }
+  licenseValid = true;
+  licenseExpiryDate = expiry;
+  return true;
+}
+
+function verifyLicense() {
+  const input = document.getElementById('licenseKeyInput').value.trim();
+  const currentKey = generateLicenseKey();
+  const errorEl = document.getElementById('licenseError');
+  const infoEl = document.getElementById('licenseInfo');
+  if (input === currentKey) {
+    const expiry = getLicenseExpiry();
+    localStorage.setItem('pharmacyLicenseKey', currentKey);
+    localStorage.setItem('pharmacyLicenseExpiry', expiry.toISOString());
+    licenseValid = true;
+    licenseExpiryDate = expiry;
+    document.getElementById('licenseOverlay').classList.add('hidden');
+    document.getElementById('licenseStatusBadge').textContent = '✅ Licensed';
+    document.getElementById('licenseStatusBadge').className = 'license-status valid';
+    showBatchNotification('✅ License verified successfully! Valid for 6 months.', 'success');
+  } else {
+    errorEl.style.display = 'block';
+    infoEl.textContent = '';
+  }
+}
+
+function checkLicenseOnLoad() {
+  if (checkLicense()) {
+    document.getElementById('licenseOverlay').classList.add('hidden');
+    document.getElementById('licenseStatusBadge').textContent = '✅ Licensed';
+    document.getElementById('licenseStatusBadge').className = 'license-status valid';
+    const expiry = new Date(localStorage.getItem('pharmacyLicenseExpiry'));
+    const daysLeft = Math.ceil((expiry - new Date()) / (1000 * 60 * 60 * 24));
+    document.getElementById('licenseInfo').textContent = 'License valid until: ' + expiry.toLocaleDateString() + ' (' + daysLeft + ' days left)';
+  } else {
+    document.getElementById('licenseStatusBadge').textContent = '🔑 License Required';
+    document.getElementById('licenseStatusBadge').className = 'license-status expired';
+  }
+}
+
+// ==================== PRINT OPTION SELECTION ====================
+let selectedPrintOption = 'thermal';
+
+function togglePrintDropdown() {
+  const dropdown = document.getElementById('printDropdown');
+  const arrow = document.getElementById('dropdownArrow');
+  dropdown.classList.toggle('show');
+  arrow.classList.toggle('open');
+}
+
+function selectPrintOption(option) {
+  selectedPrintOption = option;
+  const thermalOption = document.getElementById('thermalPrintOption');
+  const a4Option = document.getElementById('a4PrintOption');
+  const thermalRadio = thermalOption.querySelector('.radio-circle');
+  const a4Radio = a4Option.querySelector('.radio-circle');
+  if (option === 'thermal') {
+    thermalOption.classList.add('selected');
+    a4Option.classList.remove('selected');
+    thermalRadio.classList.add('checked');
+    a4Radio.classList.remove('checked');
+    document.getElementById('selectedIndicator').innerHTML = 'Selected: 🧾 Thermal Print';
+  } else {
+    a4Option.classList.add('selected');
+    thermalOption.classList.remove('selected');
+    a4Radio.classList.add('checked');
+    thermalRadio.classList.remove('checked');
+    document.getElementById('selectedIndicator').innerHTML = 'Selected: 📄 A4 Print';
+  }
+  document.getElementById('printDropdown').classList.remove('show');
+  document.getElementById('dropdownArrow').classList.remove('open');
+  showBatchNotification(`✅ ${option === 'thermal' ? 'Thermal Print' : 'A4 Print'} selected!`, 'success');
+}
+
+document.addEventListener('click', function(event) {
+  const wrapper = document.querySelector('.print-options-wrapper');
+  if (wrapper && !wrapper.contains(event.target)) {
+    document.getElementById('printDropdown').classList.remove('show');
+    document.getElementById('dropdownArrow').classList.remove('open');
+  }
+});
+
+// ==================== INDEXEDDB DATABASE ====================
+const DB_NAME = 'PharmacyDB';
+const DB_VERSION = 5;
+let db;
+let currentInvoiceNumber = 1;
+let currentLoadedInvoice = null;
+
+function openDB() {
+  return new Promise((resolve, reject) => {
+    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    request.onerror = () => { console.error('IndexedDB error:', request.error); reject(request.error); };
+    request.onsuccess = () => { db = request.result; console.log('✅ IndexedDB opened'); resolve(db); };
+    request.onupgradeneeded = (event) => {
+      const db = event.target.result;
+      if (!db.objectStoreNames.contains('invoices')) {
+        db.createObjectStore('invoices', { keyPath: 'invNo' });
+      }
+      if (!db.objectStoreNames.contains('purchases')) {
+        db.createObjectStore('purchases', { keyPath: 'id', autoIncrement: true });
+      }
+      if (!db.objectStoreNames.contains('customers')) {
+        db.createObjectStore('customers', { keyPath: 'id' });
+      }
+      if (!db.objectStoreNames.contains('products')) {
+        db.createObjectStore('products', { keyPath: 'code' });
+      }
+      if (!db.objectStoreNames.contains('inventory')) {
+        db.createObjectStore('inventory', { keyPath: 'productName' });
+      }
+      if (!db.objectStoreNames.contains('settings')) {
+        db.createObjectStore('settings', { keyPath: 'key' });
+      }
+      if (!db.objectStoreNames.contains('batchStock')) {
+        db.createObjectStore('batchStock', { keyPath: 'batchId' });
+      }
+      if (!db.objectStoreNames.contains('companyReturns')) {
+        db.createObjectStore('companyReturns', { keyPath: 'id', autoIncrement: true });
+      }
+      console.log('✅ Database stores created/upgraded');
+    };
+  });
+}
+
+function saveToDB(storeName, data) {
+  return new Promise((resolve, reject) => {
+    if (!db) { reject(new Error('DB not initialized')); return; }
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+    store.put(data);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+}
+
+function getAllFromDB(storeName) {
+  return new Promise((resolve, reject) => {
+    if (!db) { reject(new Error('DB not initialized')); return; }
+    const transaction = db.transaction(storeName, 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.getAll();
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function getFromDB(storeName, key) {
+  return new Promise((resolve, reject) => {
+    if (!db) { reject(new Error('DB not initialized')); return; }
+    const transaction = db.transaction(storeName, 'readonly');
+    const store = transaction.objectStore(storeName);
+    const request = store.get(key);
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+}
+
+function deleteFromDB(storeName, key) {
+  return new Promise((resolve, reject) => {
+    if (!db) { reject(new Error('DB not initialized')); return; }
+    const transaction = db.transaction(storeName, 'readwrite');
+    const store = transaction.objectStore(storeName);
+    store.delete(key);
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error);
+  });
+}
+
+// ==================== GLOBAL VARIABLES ====================
+let savedInvoices = [];
+let purchaseRecords = [];
+let customerList = [];
+let customerCounter = 1;
+let productCount = 1;
+let productCodes = { "Panadol": "1001", "Disprin": "1002", "Brufen": "1003", "Pandemic": "1008", "Sensoril": "1009" };
+let productRecords = [
+  { no: 1, code: "1001", product: "Panadol", rate: 50, batch: "B123", exp: "12/2024" },
+  { no: 2, code: "1002", product: "Disprin", rate: 30, batch: "B456", exp: "06/2024" },
+  { no: 3, code: "1003", product: "Brufen", rate: 80, batch: "B789", exp: "09/2024" },
+  { no: 4, code: "1008", product: "Pandemic", rate: 120, batch: "B101", exp: "03/2025" },
+  { no: 5, code: "1009", product: "Sensoril", rate: 60, batch: "B202", exp: "05/2025" }
+];
+let customerProductHistory = {};
+let inventoryData = {};
+let batchStock = [];
+let companyReturnRecords = [];
+let suggestionIndex = -1;
+
+function showBatchNotification(message, type = 'info') {
+  const notification = document.getElementById('batchNotification');
+  notification.textContent = message;
+  notification.className = 'batch-notification';
+  if (type === 'warning') notification.classList.add('warning');
+  if (type === 'success') notification.classList.add('success');
+  notification.style.display = 'block';
+  setTimeout(() => { notification.style.display = 'none'; }, 5000);
+}
+
+// ==================== ENHANCED ARROW KEY NAVIGATION SYSTEM ====================
+let currentCellPosition = { row: -1, col: -1 };
+let isArrowNavigating = false;
+
+function getEditableCells() {
+  const cells = [];
+  document.querySelectorAll('#productTable td[contenteditable="true"]').forEach(cell => {
+    cells.push({
+      element: cell,
+      row: cell.parentElement.rowIndex,
+      col: cell.cellIndex
+    });
+  });
+  const custId = document.getElementById('custId');
+  const custName = document.getElementById('custName');
+  const custCity = document.getElementById('custCity');
+  const custPhone = document.getElementById('custPhone');
+  const paidAmount = document.getElementById('paidAmount');
+  
+  if (custId) cells.push({ element: custId, row: -1, col: 0, type: 'customer-id' });
+  if (custName) cells.push({ element: custName, row: -1, col: 1, type: 'customer-name' });
+  if (custCity) cells.push({ element: custCity, row: -1, col: 2, type: 'customer-city' });
+  if (custPhone) cells.push({ element: custPhone, row: -1, col: 3, type: 'customer-phone' });
+  if (paidAmount) cells.push({ element: paidAmount, row: -1, col: 4, type: 'paid-amount' });
+  
+  return cells;
+}
+
+function getCurrentCellPosition(element) {
+  const cells = getEditableCells();
+  return cells.findIndex(c => c.element === element);
+}
+
+function navigateCell(currentElement, direction) {
+  const cells = getEditableCells();
+  const currentIndex = getCurrentCellPosition(currentElement);
+  if (currentIndex === -1) return null;
+  
+  let targetIndex = -1;
+  
+  switch(direction) {
+    case 'right':
+      targetIndex = currentIndex + 1;
+      break;
+    case 'left':
+      targetIndex = currentIndex - 1;
+      break;
+    case 'up':
+      const currentCell = cells[currentIndex];
+      const currentRow = currentCell.row;
+      const currentCol = currentCell.col;
+      if (currentRow === -1) {
+        targetIndex = currentIndex - 1;
+      } else {
+        const targetRow = currentRow - 1;
+        if (targetRow >= 0) {
+          targetIndex = cells.findIndex(c => c.row === targetRow && c.col === currentCol);
+        } else {
+          const customerFields = cells.filter(c => c.row === -1);
+          if (customerFields.length > 0) {
+            targetIndex = cells.indexOf(customerFields[0]);
+          }
+        }
+      }
+      break;
+    case 'down':
+      const currentCellD = cells[currentIndex];
+      const currentRowD = currentCellD.row;
+      const currentColD = currentCellD.col;
+      if (currentRowD === -1) {
+        const productCells = cells.filter(c => c.row === 1 && c.col === 1);
+        if (productCells.length > 0) {
+          targetIndex = cells.indexOf(productCells[0]);
+        } else {
+          targetIndex = currentIndex + 1;
+        }
+      } else {
+        const targetRow = currentRowD + 1;
+        const targetCell = cells.find(c => c.row === targetRow && c.col === currentColD);
+        if (targetCell) {
+          targetIndex = cells.indexOf(targetCell);
+        } else {
+          const paidCell = cells.find(c => c.type === 'paid-amount');
+          if (paidCell && currentColD === 6) {
+            targetIndex = cells.indexOf(paidCell);
+          } else {
+            targetIndex = currentIndex + 1;
+          }
+        }
+      }
+      break;
+  }
+  
+  if (targetIndex >= 0 && targetIndex < cells.length) {
+    return cells[targetIndex].element;
+  }
+  return null;
+}
+
+function handleArrowNavigation(event, element) {
+  const key = event.key;
+  if (key === 'ArrowRight' || key === 'ArrowLeft' || key === 'ArrowUp' || key === 'ArrowDown') {
+    event.preventDefault();
+    const direction = key.replace('Arrow', '').toLowerCase();
+    const targetElement = navigateCell(element, direction);
+    if (targetElement) {
+      isArrowNavigating = true;
+      targetElement.focus();
+      placeCursorAtEnd(targetElement);
+      setTimeout(() => { isArrowNavigating = false; }, 100);
+      return true;
+    }
+  }
+  return false;
+}
+
+// ==================== SECTION TOGGLE ====================
+function hideAllSections() {
+  document.querySelectorAll('.section').forEach(s => s.style.display = 'none');
+}
+function openInvoice() { hideAllSections(); document.getElementById("invoiceSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; document.getElementById("custId").focus(); }
+function closeInvoice() { document.getElementById("invoiceSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; currentLoadedInvoice = null; }
+function openRecords() { hideAllSections(); document.getElementById("recordsSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; loadRecords(); }
+function closeRecords() { document.getElementById("recordsSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+function openPurchase() { hideAllSections(); document.getElementById("purchaseSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; document.getElementById("purchaseProduct").focus(); loadPurchaseRecords(); }
+function closePurchase() { document.getElementById("purchaseSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+function openCustomer() { hideAllSections(); document.getElementById("customerSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; document.getElementById("custInputName").focus(); displayCustomers(customerList); }
+function closeCustomer() { document.getElementById("customerSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+function openInventory() { hideAllSections(); document.getElementById("inventorySection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; calculateInventory(); }
+function closeInventory() { document.getElementById("inventorySection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+function openBatchStock() { hideAllSections(); document.getElementById("batchStockSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; displayBatchStock(); }
+function closeBatchStock() { document.getElementById("batchStockSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+function openCompanyReturn() { hideAllSections(); document.getElementById("companyReturnSection").style.display = "block"; document.getElementById("navButtons").style.display = "none"; document.getElementById("companyReturnDate").value = new Date().toISOString().split('T')[0]; document.getElementById("companyReturnProduct").focus(); loadCompanyReturns(); }
+function closeCompanyReturn() { document.getElementById("companyReturnSection").style.display = "none"; document.getElementById("navButtons").style.display = "block"; }
+
+// ==================== LOGO UPLOAD ====================
+document.getElementById("uploadLogo").addEventListener("change", async e => {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async evt => {
+      const logoData = evt.target.result;
+      document.getElementById("logoImg").src = logoData;
+      document.getElementById("logoImg").style.display = "block";
+      document.getElementById("plusIcon").style.display = "none";
+      document.getElementById("recordsLogoImg").src = logoData;
+      document.getElementById("recordsLogoImg").style.display = "block";
+      document.getElementById("plusSign").style.display = "none";
+      await saveToDB('settings', { key: 'companyLogo', value: logoData });
+    };
+    reader.readAsDataURL(file);
+  }
+});
+document.getElementById("logoInput").addEventListener("change", function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = async function(evt) {
+      const logoData = evt.target.result;
+      document.getElementById("recordsLogoImg").src = logoData;
+      document.getElementById("recordsLogoImg").style.display = "block";
+      document.getElementById("plusSign").style.display = "none";
+      document.getElementById("logoImg").src = logoData;
+      document.getElementById("logoImg").style.display = "block";
+      document.getElementById("plusIcon").style.display = "none";
+      await saveToDB('settings', { key: 'companyLogo', value: logoData });
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// ==================== CUSTOMER FUNCTIONS ====================
+async function saveCustomer() {
+  const name = document.getElementById("custInputName").value.trim();
+  const city = document.getElementById("custInputCity").value.trim();
+  const phone = document.getElementById("custInputPhone").value.trim();
+  const id = customerCounter.toString().padStart(3, "0");
+  if (!name || !city || !phone) { alert("Please fill all fields!"); return; }
+  const customer = { id, name, city, phone };
+  customerList.push(customer);
+  customerCounter++;
+  await saveToDB('customers', customer);
+  updateStorageInfo();
+  document.getElementById("autoCustId").innerText = customerCounter.toString().padStart(3, "0");
+  document.getElementById("custInputName").value = "";
+  document.getElementById("custInputCity").value = "";
+  document.getElementById("custInputPhone").value = "";
+  displayCustomers(customerList);
+  showBatchNotification("✅ Customer saved permanently!", "success");
+}
+
+function displayCustomers(data) {
+  const tbody = document.querySelector("#customerTable tbody");
+  tbody.innerHTML = "";
+  data.forEach(c => {
+    const row = document.createElement("tr");
+    row.innerHTML = `<td>${c.id}</td><td>${c.name}</td><td>${c.city}</td><td>${c.phone}</td>`;
+    tbody.appendChild(row);
+  });
+}
+
+function searchCustomers() {
+  const keyword = document.getElementById("searchCustomer").value.toLowerCase();
+  const filtered = customerList.filter(c =>
+    c.id.toLowerCase().includes(keyword) ||
+    c.name.toLowerCase().includes(keyword) ||
+    c.city.toLowerCase().includes(keyword) ||
+    c.phone.toLowerCase().includes(keyword)
+  );
+  displayCustomers(filtered);
+}
+
+// ==================== CUSTOMER SUGGESTION ====================
+function showCustomerSuggestions() {
+  const custIdElement = document.getElementById("custId");
+  const inputText = custIdElement.innerText.trim().toLowerCase();
+  const suggestionsBox = document.getElementById("customerSuggestions");
+  suggestionIndex = -1;
+  if (inputText.length === 0) { suggestionsBox.style.display = "none"; return; }
+  const filteredCustomers = customerList.filter(customer =>
+    customer.id.toLowerCase().includes(inputText) ||
+    customer.name.toLowerCase().includes(inputText)).slice(0, 8);
+  if (filteredCustomers.length === 0) { suggestionsBox.style.display = "none"; return; }
+  suggestionsBox.innerHTML = "";
+  filteredCustomers.forEach((customer, idx) => {
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${customer.id}</strong> - ${customer.name}, ${customer.city}`;
+    div.setAttribute('data-index', idx);
+    div.onmousedown = (e) => { e.preventDefault(); selectCustomer(customer); suggestionsBox.style.display = "none"; };
+    suggestionsBox.appendChild(div);
+  });
+  const rect = custIdElement.getBoundingClientRect();
+  suggestionsBox.style.left = `${rect.left}px`;
+  suggestionsBox.style.top = `${rect.bottom + 5}px`;
+  suggestionsBox.style.display = "block";
+}
+
+function selectCustomer(customer) {
+  document.getElementById("custId").innerText = customer.id;
+  document.getElementById("custName").innerText = customer.name;
+  document.getElementById("custCity").innerText = customer.city;
+  document.getElementById("custPhone").innerText = customer.phone;
+  const firstCodeCell = document.querySelector("#productTable tr td:nth-child(2)");
+  if (firstCodeCell) { firstCodeCell.focus(); placeCursorAtEnd(firstCodeCell); }
+}
+
+function autoFillCustomerFromId() {
+  const id = document.getElementById("custId").innerText.trim();
+  if (!id) return;
+  const foundCustomer = customerList.find(customer => customer.id === id);
+  if (foundCustomer) {
+    document.getElementById("custName").innerText = foundCustomer.name;
+    document.getElementById("custCity").innerText = foundCustomer.city;
+    document.getElementById("custPhone").innerText = foundCustomer.phone;
+    const firstCodeCell = document.querySelector("#productTable tr td:nth-child(2)");
+    if (firstCodeCell) { firstCodeCell.focus(); placeCursorAtEnd(firstCodeCell); }
+  }
+}
+
+function handleCustomerIdInputInline(inputElement) { showCustomerSuggestions(); }
+
+function handleCustomerIdKeyDown(event, inputElement) {
+  if (handleArrowNavigation(event, inputElement)) return;
+  
+  const suggestionsBox = document.getElementById("customerSuggestions");
+  const suggestions = suggestionsBox.querySelectorAll('div');
+  
+  if (event.key === "ArrowDown" && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+    event.preventDefault();
+    suggestionIndex = (suggestionIndex + 1) % suggestions.length;
+    highlightSuggestion(suggestions, suggestionIndex);
+    return;
+  }
+  if (event.key === "ArrowUp" && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+    event.preventDefault();
+    suggestionIndex = (suggestionIndex - 1 + suggestions.length) % suggestions.length;
+    highlightSuggestion(suggestions, suggestionIndex);
+    return;
+  }
+  if (event.key === "Enter") {
+    event.preventDefault();
+    if (suggestionIndex >= 0 && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+      const highlightedDiv = suggestions[suggestionIndex];
+      const idText = highlightedDiv.querySelector('strong').innerText;
+      const foundCustomer = customerList.find(c => c.id === idText);
+      if (foundCustomer) { 
+        selectCustomer(foundCustomer); 
+        const firstCodeCell = document.querySelector("#productTable tr td:nth-child(2)");
+        if (firstCodeCell) { firstCodeCell.focus(); placeCursorAtEnd(firstCodeCell); }
+      }
+    } else { 
+      autoFillCustomerFromId(); 
+      const firstCodeCell = document.querySelector("#productTable tr td:nth-child(2)");
+      if (firstCodeCell) { firstCodeCell.focus(); placeCursorAtEnd(firstCodeCell); }
+    }
+    suggestionsBox.style.display = "none";
+    suggestionIndex = -1;
+  } else if (event.key === "Escape") { 
+    suggestionsBox.style.display = "none"; 
+    suggestionIndex = -1; 
+  }
+}
+
+function highlightSuggestion(suggestions, index) {
+  suggestions.forEach((div, i) => { div.classList.toggle('highlighted', i === index); });
+  if (suggestions[index]) { suggestions[index].scrollIntoView({ block: 'nearest' }); }
+}
+
+// ==================== BATCH STOCK HELPERS ====================
+function getAvailableBatches(productCode, productName) {
+  return batchStock.filter(b => (b.code === productCode || b.product === productName) && b.available > 0)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+}
+
+function getBatchDetailsForQty(productCode, productName, requestedQty) {
+  const batches = getAvailableBatches(productCode, productName);
+  const result = [];
+  let remaining = requestedQty;
+  for (const batch of batches) {
+    if (remaining <= 0) break;
+    const fromBatch = Math.min(batch.available, remaining);
+    result.push({ batchId: batch.batchId, batch: batch.batch, rate: batch.rate, qty: fromBatch, expiry: batch.expiry });
+    remaining -= fromBatch;
+  }
+  return { allocations: result, totalAvailable: batches.reduce((sum, b) => sum + b.available, 0), shortage: remaining > 0 ? remaining : 0 };
+}
+
+// ==================== PRODUCT SUGGESTION ====================
+function showProductSuggestions(inputElement) {
+  const inputText = inputElement.innerText.trim().toLowerCase();
+  const suggestionsBox = document.getElementById("productSuggestions");
+  suggestionIndex = -1;
+  if (inputText.length === 0) { suggestionsBox.style.display = "none"; return; }
+  const filteredProducts = productRecords.filter(product =>
+    product.code.toLowerCase().includes(inputText) ||
+    product.product.toLowerCase().includes(inputText)).slice(0, 8);
+  if (filteredProducts.length === 0) { suggestionsBox.style.display = "none"; return; }
+  suggestionsBox.innerHTML = "";
+  filteredProducts.forEach((product, idx) => {
+    const availableBatches = batchStock.filter(b => b.code === product.code);
+    const totalAvailable = availableBatches.reduce((sum, b) => sum + b.available, 0);
+    const rates = [...new Set(availableBatches.map(b => b.rate))];
+    const rateDisplay = rates.length > 1 ? `${Math.min(...rates)}-${Math.max(...rates)}` : (rates[0] || product.rate);
+    const div = document.createElement("div");
+    div.innerHTML = `<strong>${product.code}</strong> - ${product.product} (Rs. ${rateDisplay}) [Stock: ${totalAvailable}]`;
+    div.setAttribute('data-index', idx);
+    div.onmousedown = (e) => { e.preventDefault(); selectProduct(product, inputElement); suggestionsBox.style.display = "none"; };
+    suggestionsBox.appendChild(div);
+  });
+  const rect = inputElement.getBoundingClientRect();
+  suggestionsBox.style.left = `${rect.left}px`;
+  suggestionsBox.style.top = `${rect.bottom + 5}px`;
+  suggestionsBox.style.display = "block";
+}
+
+function selectProduct(product, codeCell) {
+  const row = codeCell.parentElement;
+  const customerId = document.getElementById("custId").innerText.trim();
+  const existingProducts = [];
+  document.querySelectorAll("#productTable tr").forEach(existingRow => {
+    const existingCode = existingRow.querySelector("td:nth-child(2)").innerText.trim();
+    if (existingCode === product.code && existingRow !== row) { existingProducts.push(existingCode); }
+  });
+  if (existingProducts.length > 0) {
+    showBatchNotification(`⚠️ Product "${product.product}" (${product.code}) is already included!`, 'warning');
+    codeCell.innerText = "";
+    return;
+  }
+  const availableBatches = getAvailableBatches(product.code, product.product);
+  let displayRate = product.rate;
+  if (availableBatches.length > 0) { displayRate = availableBatches[0].rate; }
+  if (customerId && customerProductHistory[customerId] && customerProductHistory[customerId][product.code]) {
+    displayRate = customerProductHistory[customerId][product.code].rate;
+  }
+  codeCell.innerText = product.code;
+  row.children[2].innerText = product.product;
+  row.children[3].innerText = "";
+  row.children[4].innerText = displayRate;
+  row.children[5].innerText = availableBatches.length > 0 ? availableBatches[0].batch : product.batch;
+  row.children[6].innerText = customerId && customerProductHistory[customerId] && customerProductHistory[customerId][product.code] 
+    ? (customerProductHistory[customerId][product.code].discount || 0) : 0;
+  calcTotal(row.children[3]);
+  const qtyCell = row.querySelector("td:nth-child(4)");
+  if (qtyCell) { qtyCell.focus(); placeCursorAtEnd(qtyCell); }
+}
+
+// ==================== INVOICE FUNCTIONS ====================
+function fillProductData(codeCell) {
+  const code = codeCell.innerText.trim();
+  const product = productRecords.find(p => p.code === code);
+  if (!product) return;
+  const customerId = document.getElementById("custId").innerText.trim();
+  const row = codeCell.parentElement;
+  const existingProducts = [];
+  document.querySelectorAll("#productTable tr").forEach(existingRow => {
+    const existingCode = existingRow.querySelector("td:nth-child(2)").innerText.trim();
+    if (existingCode === code && existingRow !== row) { existingProducts.push(existingCode); }
+  });
+  if (existingProducts.length > 0) {
+    showBatchNotification(`⚠️ Product "${product.product}" (${code}) is already included!`, 'warning');
+    codeCell.innerText = "";
+    return;
+  }
+  const availableBatches = getAvailableBatches(code, product.product);
+  let displayRate = product.rate;
+  if (availableBatches.length > 0) { displayRate = availableBatches[0].rate; }
+  if (customerId && customerProductHistory[customerId] && customerProductHistory[customerId][code]) {
+    displayRate = customerProductHistory[customerId][code].rate;
+  }
+  row.children[2].innerText = product.product;
+  row.children[3].innerText = "";
+  row.children[4].innerText = displayRate;
+  row.children[5].innerText = availableBatches.length > 0 ? availableBatches[0].batch : product.batch;
+  row.children[6].innerText = customerId && customerProductHistory[customerId] && customerProductHistory[customerId][code] 
+    ? (customerProductHistory[customerId][code].discount || 0) : 0;
+  calcTotal(row.children[3]);
+}
+
+function calcTotal(cell) {
+  const row = cell.parentElement;
+  const qty = parseFloat(row.children[3].innerText) || 0;
+  const rate = parseFloat(row.children[4].innerText) || 0;
+  const disc = parseFloat(row.children[6].innerText) || 0;
+  const subtotal = qty * rate;
+  const discount = subtotal * (disc / 100);
+  const total = subtotal - discount;
+  row.children[7].innerText = total.toFixed(0);
+  if (qty > 0) {
+    const code = row.children[1].innerText.trim();
+    const productName = row.children[2].innerText.trim();
+    const batchInfo = getBatchDetailsForQty(code, productName, qty);
+    if (batchInfo.shortage > 0) {
+      showBatchNotification(`⚠️ Insufficient stock for ${productName}! Only ${batchInfo.totalAvailable} available.`, 'warning');
+    } else if (batchInfo.allocations.length > 1) {
+      row.children[5].innerText = batchInfo.allocations.map(a => a.batch).join('/');
+      row.setAttribute('data-batch-info', JSON.stringify(batchInfo.allocations));
+    } else if (batchInfo.allocations.length === 1) {
+      row.setAttribute('data-batch-info', JSON.stringify(batchInfo.allocations));
+    }
+  }
+  updateGrandTotal();
+}
+
+function updateGrandTotal() {
+  let grand = 0;
+  document.querySelectorAll("#productTable tr td:nth-child(8)").forEach(cell => {
+    grand += parseFloat(cell.innerText) || 0;
+  });
+  document.getElementById("subTotalAmount").innerText = grand.toFixed(0);
+  document.getElementById("totalAmount").innerText = grand.toFixed(0);
+  updateRemaining();
+}
+
+function updateRemaining() {
+  const grand = parseFloat(document.getElementById("totalAmount").innerText) || 0;
+  const paid = parseFloat(document.getElementById("paidAmount").innerText) || 0;
+  document.getElementById("remainingBalance").innerText = (grand - paid).toFixed(0);
+}
+
+function placeCursorAtEnd(el) {
+  const range = document.createRange();
+  const sel = window.getSelection();
+  range.selectNodeContents(el);
+  range.collapse(false);
+  sel.removeAllRanges();
+  sel.addRange(range);
+}
+
+function addNewRow() {
+  const table = document.getElementById("productTable");
+  const rowCount = table.rows.length + 1;
+  const row = document.createElement("tr");
+  row.innerHTML = `
+    <td>${rowCount}</td>
+    <td contenteditable="true" oninput="showProductSuggestions(this)" onkeydown="handleProductCodeInput(event, this)"></td>
+    <td contenteditable="true"></td>
+    <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleQtyInput(event, this)"></td>
+    <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleRateInput(event, this)"></td>
+    <td contenteditable="true"></td>
+    <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleDiscInput(event, this)"></td>
+    <td>0</td>
+  `;
+  table.appendChild(row);
+  return row;
+}
+
+function handleProductCodeInput(event, codeCell) {
+  if (handleArrowNavigation(event, codeCell)) return;
+  
+  const suggestionsBox = document.getElementById("productSuggestions");
+  const suggestions = suggestionsBox.querySelectorAll('div');
+  
+  if (event.key === "ArrowDown" && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+    event.preventDefault();
+    suggestionIndex = (suggestionIndex + 1) % suggestions.length;
+    highlightSuggestion(suggestions, suggestionIndex);
+    return;
+  }
+  if (event.key === "ArrowUp" && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+    event.preventDefault();
+    suggestionIndex = (suggestionIndex - 1 + suggestions.length) % suggestions.length;
+    highlightSuggestion(suggestions, suggestionIndex);
+    return;
+  }
+  if (event.key === "Enter") {
+    event.preventDefault();
+    if (suggestionIndex >= 0 && suggestions.length > 0 && suggestionsBox.style.display !== "none") {
+      const highlightedDiv = suggestions[suggestionIndex];
+      const codeText = highlightedDiv.querySelector('strong').innerText;
+      const product = productRecords.find(p => p.code === codeText);
+      if (product) { 
+        selectProduct(product, codeCell); 
+        const qtyCell = codeCell.parentElement.querySelector("td:nth-child(4)");
+        if (qtyCell) { qtyCell.focus(); placeCursorAtEnd(qtyCell); }
+      }
+    } else {
+      const code = codeCell.innerText.trim();
+      if (code) { 
+        fillProductData(codeCell); 
+        const qtyCell = codeCell.parentElement.querySelector("td:nth-child(4)");
+        if (qtyCell) { qtyCell.focus(); placeCursorAtEnd(qtyCell); }
+      }
+    }
+    suggestionsBox.style.display = "none";
+    suggestionIndex = -1;
+  } else if (event.key === "Escape") { 
+    suggestionsBox.style.display = "none"; 
+    suggestionIndex = -1; 
+  } else { 
+    showProductSuggestions(codeCell); 
+  }
+}
+
+function handleQtyInput(event, qtyCell) {
+  if (handleArrowNavigation(event, qtyCell)) return;
+  
+  if (event.key === "Enter" || event.key === "Tab") {
+    event.preventDefault();
+    calcTotal(qtyCell);
+    const rateCell = qtyCell.parentElement.querySelector("td:nth-child(5)");
+    if (rateCell) { rateCell.focus(); placeCursorAtEnd(rateCell); }
+  }
+}
+
+function handleRateInput(event, rateCell) {
+  if (handleArrowNavigation(event, rateCell)) return;
+  
+  if (event.key === "Enter" || event.key === "Tab") {
+    event.preventDefault();
+    calcTotal(rateCell);
+    const discCell = rateCell.parentElement.querySelector("td:nth-child(7)");
+    if (discCell) { discCell.focus(); placeCursorAtEnd(discCell); }
+  }
+}
+
+function handleDiscInput(event, discCell) {
+  if (handleArrowNavigation(event, discCell)) return;
+  
+  if (event.key === "Enter" || event.key === "Tab") {
+    event.preventDefault();
+    calcTotal(discCell);
+    const row = discCell.parentElement;
+    const table = row.parentElement;
+    const codeCell = row.querySelector("td:nth-child(2)");
+    
+    if (row === table.lastElementChild && codeCell.innerText.trim() === "") {
+      document.getElementById("paidAmount").focus();
+      placeCursorAtEnd(document.getElementById("paidAmount"));
+    } else if (row === table.lastElementChild) {
+      const newRow = addNewRow();
+      const newCodeCell = newRow.querySelector("td:nth-child(2)");
+      newCodeCell.focus();
+    } else {
+      const nextRow = row.nextElementSibling;
+      if (nextRow) {
+        const nextCodeCell = nextRow.querySelector("td:nth-child(2)");
+        if (nextCodeCell) nextCodeCell.focus();
+      }
+    }
+  }
+}
+
+function handlePaidAmountInput(event) {
+  if (handleArrowNavigation(event, event.target)) return;
+  
+  if (event.key === "Enter" || event.key === "Tab") {
+    event.preventDefault();
+    updateRemaining();
+    document.getElementById("btnPrintSave").focus();
+  }
+}
+
+function handleInvNoKeyDown(event) {
+  if (event.key === "Enter") { event.preventDefault(); handleInvoiceNumberChange(document.getElementById("invNo").value); }
+}
+
+function handleInvoiceNumberChange(invNoValue) {
+  const invNoStr = invNoValue.toString().trim();
+  if (!invNoStr) { currentLoadedInvoice = null; return; }
+  const invoice = savedInvoices.find(inv => inv.invNo === invNoStr);
+  if (invoice) {
+    loadExistingInvoice(invoice);
+    showBatchNotification(`📄 Invoice #${invNoStr} loaded!`, 'info');
+  } else {
+    currentLoadedInvoice = null;
+    document.getElementById("invNo").value = invNoStr;
+    clearInvoiceForm();
+    showBatchNotification(`📝 New Invoice #${invNoStr} ready!`, 'info');
+  }
+}
+
+function loadExistingInvoice(invoice) {
+  currentLoadedInvoice = invoice.invNo;
+  document.getElementById("invNo").value = invoice.invNo;
+  document.getElementById("invDate").innerText = invoice.invDate;
+  document.getElementById("custId").innerText = invoice.custId || "";
+  document.getElementById("custName").innerText = invoice.custName || "";
+  document.getElementById("custCity").innerText = invoice.custCity || "";
+  document.getElementById("custPhone").innerText = invoice.custPhone || "";
+  document.getElementById("paidAmount").innerText = invoice.paidAmount || "";
+  document.getElementById("totalAmount").innerText = invoice.totalAmount || "0";
+  updateRemaining();
+  document.getElementById("productTable").innerHTML = "";
+  if (invoice.products && invoice.products.length > 0) {
+    invoice.products.forEach((product, index) => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td>${index + 1}</td>
+        <td contenteditable="true" oninput="showProductSuggestions(this)" onkeydown="handleProductCodeInput(event, this)">${product.code || ''}</td>
+        <td contenteditable="true">${product.item || ''}</td>
+        <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleQtyInput(event, this)">${product.qty}</td>
+        <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleRateInput(event, this)">${product.rate}</td>
+        <td contenteditable="true">${product.batch || ''}</td>
+        <td contenteditable="true" oninput="calcTotal(this)" onkeydown="handleDiscInput(event, this)">${product.discount || 0}</td>
+        <td>${product.total}</td>
+      `;
+      if (product.batchInfo) { row.setAttribute('data-batch-info', JSON.stringify(product.batchInfo)); }
+      document.getElementById("productTable").appendChild(row);
+    });
+  }
+  addNewRow();
+  updateGrandTotal();
+}
+
+function clearInvoiceForm() {
+  document.getElementById("custId").innerText = "";
+  document.getElementById("custName").innerText = "";
+  document.getElementById("custCity").innerText = "";
+  document.getElementById("custPhone").innerText = "";
+  document.getElementById("paidAmount").innerText = "";
+  document.getElementById("productTable").innerHTML = "";
+  const d = new Date();
+  document.getElementById("invDate").innerText = d.toLocaleDateString("en-GB");
+  addNewRow();
+  updateGrandTotal();
+  document.getElementById("custId").focus();
+}
+
+// ==================== PRINT/SAVE INVOICE ====================
+async function printSaveInvoice() {
+  try {
+    await saveInvoiceSilent();
+    if (selectedPrintOption === 'thermal') {
+      thermalPrint();
+      showBatchNotification('🧾 Invoice printed via Thermal format!', 'success');
+    } else {
+      window.print();
+      showBatchNotification('📄 Invoice printed via A4 format!', 'success');
+    }
+  } catch (err) {
+    console.error('Error saving before print:', err);
+    if (selectedPrintOption === 'thermal') { thermalPrint(); } else { window.print(); }
+  }
+}
+
+async function saveInvoiceSilent() {
+  const invNo = document.getElementById("invNo").value.trim();
+  const invDate = document.getElementById("invDate").innerText;
+  const custId = document.getElementById("custId").innerText.trim();
+  const custName = document.getElementById("custName").innerText.trim();
+  const custCity = document.getElementById("custCity").innerText.trim();
+  const custPhone = document.getElementById("custPhone").innerText.trim();
+  const totalAmount = parseFloat(document.getElementById("totalAmount").innerText) || 0;
+  const paidAmount = parseFloat(document.getElementById("paidAmount").innerText) || 0;
+  const remainingBalance = parseFloat(document.getElementById("remainingBalance").innerText) || 0;
+  
+  if (!custName) { showBatchNotification("Please enter customer name!", "warning"); throw new Error("No customer name"); }
+  if (!invNo) { document.getElementById("invNo").value = currentInvoiceNumber; throw new Error("No invoice number"); }
+  
+  const products = [];
+  const rows = document.querySelectorAll("#productTable tr");
+  for (const row of rows) {
+    const code = row.querySelector("td:nth-child(2)").innerText.trim();
+    const item = row.querySelector("td:nth-child(3)").innerText.trim();
+    const qty = parseFloat(row.querySelector("td:nth-child(4)").innerText) || 0;
+    const rate = parseFloat(row.querySelector("td:nth-child(5)").innerText) || 0;
+    const batch = row.querySelector("td:nth-child(6)").innerText.trim();
+    const discount = parseFloat(row.querySelector("td:nth-child(7)").innerText) || 0;
+    const total = parseFloat(row.querySelector("td:nth-child(8)").innerText) || 0;
+    
+    if (code && item && qty > 0) {
+      let batchAllocations = [];
+      const rowBatchInfo = row.getAttribute('data-batch-info');
+      if (rowBatchInfo) { try { batchAllocations = JSON.parse(rowBatchInfo); } catch(e) {} }
+      if (batchAllocations.length === 0) {
+        const batchInfo = getBatchDetailsForQty(code, item, qty);
+        batchAllocations = batchInfo.allocations;
+      }
+      products.push({ code, item, qty, rate, batch, discount, total, returnedQty: 0, returnDate: "", batchInfo: batchAllocations });
+      if (custId) {
+        if (!customerProductHistory[custId]) { customerProductHistory[custId] = {}; }
+        customerProductHistory[custId][code] = { rate: rate, discount: discount };
+      }
+    }
+  }
+  
+  if (products.length === 0) { showBatchNotification("Please add at least one product!", "warning"); throw new Error("No products"); }
+  
+  const invoice = { invNo, invDate, custId, custName, custCity, custPhone, products, totalAmount, paidAmount, remainingBalance, type: "sale" };
+  
+  const existingIndex = savedInvoices.findIndex(inv => inv.invNo === invNo);
+  if (existingIndex >= 0) {
+    const oldInvoice = savedInvoices[existingIndex];
+    if (oldInvoice.products) {
+      oldInvoice.products.forEach(product => {
+        if (product.batchInfo) {
+          product.batchInfo.forEach(bi => {
+            const batch = batchStock.find(b => b.batchId === bi.batchId);
+            if (batch) { batch.soldQty = Math.max(0, batch.soldQty - bi.qty); batch.available = batch.purchaseQty - batch.soldQty; }
+          });
+        }
+      });
+    }
+    savedInvoices[existingIndex] = invoice;
+  } else {
+    savedInvoices.push(invoice);
+    const invNum = parseInt(invNo);
+    if (!isNaN(invNum) && invNum >= currentInvoiceNumber) {
+      currentInvoiceNumber = invNum + 1;
+      await saveToDB('settings', { key: 'invoiceCounter', value: currentInvoiceNumber });
+    }
+  }
+  
+  for (const product of products) {
+    if (product.batchInfo) {
+      for (const bi of product.batchInfo) {
+        const batch = batchStock.find(b => b.batchId === bi.batchId);
+        if (batch) { batch.soldQty += bi.qty; batch.available = batch.purchaseQty - batch.soldQty; }
+      }
+    }
+  }
+  
+  await saveToDB('invoices', invoice);
+  await saveToDB('settings', { key: 'customerProductHistory', value: customerProductHistory });
+  await saveAllBatchStockData();
+  updateStorageInfo();
+  currentLoadedInvoice = invNo;
+  return invoice;
+}
+
+async function saveInvoice() {
+  try {
+    await saveInvoiceSilent();
+    loadRecords();
+    updateInventoryData();
+    showBatchNotification("✅ Invoice saved permanently with batch tracking!", "success");
+  } catch (err) {
+    console.error('Error saving invoice:', err);
+    if (err.message !== "No customer name" && err.message !== "No invoice number" && err.message !== "No products") {
+      showBatchNotification("❌ Error saving invoice!", "warning");
+    }
+  }
+}
+
+function clearInvoice() {
+  currentLoadedInvoice = null;
+  clearInvoiceForm();
+  document.getElementById("invNo").value = currentInvoiceNumber;
+  const d = new Date();
+  document.getElementById("invDate").innerText = d.toLocaleDateString("en-GB");
+}
+
+function parseDate(dateStr) {
+  if (!dateStr || dateStr === "-") return null;
+  const parts = dateStr.split('/');
+  if (parts.length === 3) { return new Date(parts[2], parts[1] - 1, parts[0]); }
+  const d = new Date(dateStr);
+  return isNaN(d.getTime()) ? null : d;
+}
+
+// ==================== THERMAL PRINT ====================
+function thermalPrint() {
+  const companyName = document.querySelector(".info strong").innerText;
+  const companyAddress = document.querySelector(".info div:nth-child(2)").innerText;
+  const companyPhone = document.querySelector(".info div:nth-child(4)").innerText.replace("Phone: ", "");
+  const invNo = document.getElementById("invNo").value;
+  const invDate = document.getElementById("invDate").innerText;
+  const custName = document.getElementById("custName").innerText;
+  const custPhone = document.getElementById("custPhone").innerText;
+  
+  const products = [];
+  document.querySelectorAll("#productTable tr").forEach(row => {
+    const no = row.querySelector("td:nth-child(1)").innerText;
+    const item = row.querySelector("td:nth-child(3)").innerText;
+    const qty = row.querySelector("td:nth-child(4)").innerText;
+    const rate = row.querySelector("td:nth-child(5)").innerText;
+    const disc = row.querySelector("td:nth-child(7)").innerText;
+    const total = row.querySelector("td:nth-child(8)").innerText;
+    if (item.trim() !== "") { products.push({ no, item, qty, rate, disc, total }); }
+  });
+  
+  document.getElementById("thermalCompanyName").innerText = companyName.toUpperCase();
+  document.getElementById("thermalCompanyAddress").innerText = companyAddress;
+  document.getElementById("thermalCompanyPhone").innerText = companyPhone;
+  document.getElementById("thermalInvNo").innerText = invNo;
+  document.getElementById("thermalInvDate").innerText = invDate;
+  document.getElementById("thermalCustomerName").innerText = custName;
+  document.getElementById("thermalCustomerPhone").innerText = custPhone;
+  
+  const tbody = document.getElementById("thermalProducts");
+  tbody.innerHTML = "";
+  products.forEach(product => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${product.no}</td>
+      <td style="text-align:left;">${product.item}</td>
+      <td style="text-align:center;">${product.qty}</td>
+      <td style="text-align:right;">${product.rate}</td>
+      <td style="text-align:right;">${product.disc}%</td>
+      <td style="text-align:right;">${product.total}</td>
+    `;
+    tbody.appendChild(row);
+  });
+  
+  document.getElementById("thermalTotalAmount").innerText = document.getElementById("totalAmount").innerText;
+  document.getElementById("thermalPaidAmount").innerText = document.getElementById("paidAmount").innerText || "0";
+  document.getElementById("thermalBalance").innerText = document.getElementById("remainingBalance").innerText;
+  
+  const thermalContent = document.getElementById("thermalContent");
+  const printWindow = window.open('', '_blank', 'width=400,height=600');
+  if (printWindow) {
+    printWindow.document.write(`
+      <html><head><title>Thermal Print - Invoice #${invNo}</title>
+      <style>@page{size:80mm auto;margin:4mm;}body{font-family:'Arial',Arial,sans-serif;font-size:15px;font-weight:normal;width:80mm;padding:5px;line-height:1.4;color:#000;margin:0;background:#fff;}table{width:100%;border-collapse:collapse;}td,th{padding:2px 3px;border:1px solid #000;text-align:center;font-size:13px;}.right{text-align:right;}.center{text-align:center;}.bold{font-weight:bold;}.small{font-size:11px;}.dashed{border-top:2px dashed #000;margin:4px 0;}</style>
+      </head><body>${thermalContent.innerHTML}</body></html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+  }
+}
+
+// ==================== RECORDS FUNCTIONS ====================
+function loadRecords() {
+  const recordsTable = document.getElementById("recordsTable");
+  recordsTable.innerHTML = "";
+  
+  const openingDateStr = document.getElementById("openingDate").value;
+  const closingDateStr = document.getElementById("closingDate").value;
+  const searchQuery = document.getElementById("mainSearch").value.toLowerCase();
+  
+  let openingDate = null, closingDate = null;
+  if (openingDateStr) { openingDate = new Date(openingDateStr); openingDate.setHours(0,0,0,0); }
+  if (closingDateStr) { closingDate = new Date(closingDateStr); closingDate.setHours(23,59,59,999); }
+  
+  let subTotal = 0, paidTotal = 0, remainingTotal = 0, returnTotal = 0, recordCounter = 1;
+  const processedInvoices = new Set();
+  
+  savedInvoices.forEach(invoice => {
+    if (invoice.type === "sale") {
+      const invoiceDate = parseDate(invoice.invDate);
+      let inDateRange = true;
+      if (openingDate && invoiceDate && invoiceDate < openingDate) inDateRange = false;
+      if (closingDate && invoiceDate && invoiceDate > closingDate) inDateRange = false;
+      if (!inDateRange) return;
+      
+      const invoiceMatchesSearch = !searchQuery || 
+        invoice.invNo.toLowerCase().includes(searchQuery) ||
+        invoice.custName.toLowerCase().includes(searchQuery) ||
+        invoice.custCity.toLowerCase().includes(searchQuery) ||
+        invoice.products.some(p => p.item.toLowerCase().includes(searchQuery) || p.code.toLowerCase().includes(searchQuery));
+      
+      invoice.products.forEach(product => {
+        const originalQty = product.qty + (product.returnedQty || 0);
+        const returnQty = product.returnedQty || 0;
+        const returnDate = product.returnDate || "-";
+        const total = product.total || 0;
+        const returnAmount = returnQty * product.rate;
+        
+        const rowMatchesSearch = !searchQuery || invoiceMatchesSearch ||
+          product.item.toLowerCase().includes(searchQuery) ||
+          product.code.toLowerCase().includes(searchQuery) ||
+          invoice.invNo.toLowerCase().includes(searchQuery) ||
+          invoice.custName.toLowerCase().includes(searchQuery) ||
+          invoice.custCity.toLowerCase().includes(searchQuery);
+        
+        if (!rowMatchesSearch) return;
+        
+        subTotal += total;
+        returnTotal += returnAmount;
+        
+        if (!processedInvoices.has(invoice.invNo)) {
+          paidTotal += parseFloat(invoice.paidAmount) || 0;
+          remainingTotal += parseFloat(invoice.remainingBalance) || 0;
+          processedInvoices.add(invoice.invNo);
+        }
+        
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${recordCounter++}</td>
+          <td>${invoice.invDate}</td>
+          <td>${invoice.invNo}</td>
+          <td>${product.item}</td>
+          <td class="numeric-cell">${originalQty}</td>
+          <td>${product.batch || '-'}</td>
+          <td class="numeric-cell">${product.rate}</td>
+          <td class="numeric-cell">${total}</td>
+          <td class="numeric-cell">${returnQty}</td>
+          <td>${returnDate}</td>
+          <td>${invoice.custName}</td>
+          <td>${invoice.custCity}</td>
+          <td class="numeric-cell">${invoice.paidAmount}</td>
+          <td class="numeric-cell">${invoice.remainingBalance}</td>
+          <td>${product.qty > 0 ? `<button class="records-button return-btn" onclick="markReturned(this)">Return</button>` : `<button class="records-button" disabled>Returned</button>`}</td>
+        `;
+        if (returnQty > 0) { row.classList.add('returned-row'); }
+        recordsTable.appendChild(row);
+      });
+    }
+  });
+  
+  document.getElementById("recSubTotalAmount").textContent = 'Rs. ' + subTotal.toFixed(0);
+  document.getElementById("paidTotalAmount").textContent = 'Rs. ' + paidTotal.toFixed(0);
+  document.getElementById("remainingTotalAmount").textContent = 'Rs. ' + remainingTotal.toFixed(0);
+  document.getElementById("returnTotalAmount").textContent = 'Rs. ' + returnTotal.toFixed(0);
+  document.getElementById("recordsDate").textContent = new Date().toLocaleDateString("en-GB");
+}
+
+async function markReturned(button) {
+  const row = button.closest('tr');
+  const cells = row.cells;
+  const qtyCell = cells[4];
+  const returnCell = cells[8];
+  const returnDateCell = cells[9];
+  const rateCell = cells[6];
+  const totalCell = cells[7];
+  const paidCell = cells[12];
+  const remainingCell = cells[13];
+  
+  const originalQty = parseInt(qtyCell.textContent);
+  const alreadyReturned = parseInt(returnCell.textContent) || 0;
+  const soldQty = originalQty - alreadyReturned;
+  const rate = parseFloat(rateCell.textContent);
+  const total = parseFloat(totalCell.textContent);
+  const paid = parseFloat(paidCell.textContent);
+  const remaining = parseFloat(remainingCell.textContent);
+  
+  const returnQty = prompt(`Enter return quantity (Max ${soldQty}):`, "0");
+  if (returnQty === null) return;
+  const parsedReturnQty = parseInt(returnQty);
+  if (isNaN(parsedReturnQty)) { alert("Please enter a valid number"); return; }
+  if (parsedReturnQty <= 0 || parsedReturnQty > soldQty) {
+    alert(`Invalid return quantity. Must be between 1 and ${soldQty}`);
+    return;
+  }
+  
+  const returnAmount = parsedReturnQty * rate;
+  const newReturnedQty = alreadyReturned + parsedReturnQty;
+  const newTotal = total - returnAmount;
+  const returnDate = new Date().toLocaleDateString('en-GB');
+  
+  let newPaid = paid, newRemaining = remaining;
+  if (remaining > 0) {
+    if (returnAmount <= remaining) { newRemaining = remaining - returnAmount; }
+    else { const excess = returnAmount - remaining; newRemaining = 0; newPaid = Math.max(0, paid - excess); }
+  } else { newPaid = Math.max(0, paid - returnAmount); }
+  
+  qtyCell.textContent = originalQty;
+  returnCell.textContent = newReturnedQty;
+  returnDateCell.textContent = returnDate;
+  totalCell.textContent = newTotal;
+  paidCell.textContent = newPaid.toFixed(0);
+  remainingCell.textContent = newRemaining.toFixed(0);
+  
+  if (originalQty - newReturnedQty === 0) { button.disabled = true; button.textContent = "Returned"; }
+  else { button.textContent = "Partially Returned"; }
+  row.classList.add('returned-row');
+  
+  const invNo = row.cells[2].textContent;
+  const productName = row.cells[3].textContent;
+  const invoice = savedInvoices.find(inv => inv.invNo === invNo);
+  if (invoice) {
+    const product = invoice.products.find(p => p.item === productName);
+    if (product && product.batchInfo) {
+      let remainingQty = parsedReturnQty;
+      for (let i = product.batchInfo.length - 1; i >= 0 && remainingQty > 0; i--) {
+        const bi = product.batchInfo[i];
+        const batch = batchStock.find(b => b.batchId === bi.batchId);
+        if (batch) {
+          const toReturn = Math.min(bi.qty, remainingQty);
+          batch.soldQty = Math.max(0, batch.soldQty - toReturn);
+          batch.available = batch.purchaseQty - batch.soldQty;
+          remainingQty -= toReturn;
+        }
+      }
+    }
+  }
+  
+  await updateSavedInvoiceAfterReturn(row, newReturnedQty, returnDate);
+  await saveAllBatchStockData();
+  updateInventoryData();
+  loadRecords();
+}
+
+async function updateSavedInvoiceAfterReturn(row, returnQty, returnDate) {
+  const invNo = row.cells[2].textContent;
+  const productName = row.cells[3].textContent;
+  const newTotal = parseFloat(row.cells[7].textContent);
+  const newPaid = parseFloat(row.cells[12].textContent);
+  const newRemaining = parseFloat(row.cells[13].textContent);
+  
+  const invoiceIndex = savedInvoices.findIndex(inv => inv.invNo === invNo);
+  if (invoiceIndex >= 0) {
+    const productIndex = savedInvoices[invoiceIndex].products.findIndex(p => p.item === productName);
+    if (productIndex >= 0) {
+      savedInvoices[invoiceIndex].products[productIndex] = {
+        ...savedInvoices[invoiceIndex].products[productIndex],
+        qty: (savedInvoices[invoiceIndex].products[productIndex].qty +
+          savedInvoices[invoiceIndex].products[productIndex].returnedQty) - returnQty,
+        total: newTotal,
+        returnedQty: returnQty,
+        returnDate: returnDate
+      };
+      savedInvoices[invoiceIndex].paidAmount = newPaid;
+      savedInvoices[invoiceIndex].remainingBalance = newRemaining;
+      await saveToDB('invoices', savedInvoices[invoiceIndex]);
+    }
+  }
+}
+
+function filterRecords() { loadRecords(); }
+
+function filterCompany() {
+  const query = document.getElementById("companySearch").value.toLowerCase();
+  const companyName = document.getElementById("recordsCompanyName").textContent.toLowerCase();
+  const isVisible = companyName.includes(query);
+  document.querySelectorAll(".records-info div").forEach(div => {
+    div.style.display = (query === "" || isVisible) ? "" : "none";
+  });
+}
+
+function filterByDate() { loadRecords(); }
+
+function printRecords() {
+  const printArea = document.getElementById("recordsPrintArea");
+  const printWindow = window.open('', '_blank', 'width=900,height=700');
+  printWindow.document.write(`
+    <html><head><title>Sales Records Print</title>
+    <style>body{font-family:Arial,sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;font-size:10px;}th,td{border:1px solid #ddd;padding:5px;text-align:left;}th{background:#f0f0f0;}.records-summary{display:flex;justify-content:space-around;margin-top:15px;padding:15px;background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);border-radius:8px;}.summary-item{background:white;padding:12px 20px;border-radius:6px;text-align:center;}.summary-value{font-size:18px;font-weight:bold;color:#333;}.summary-label{font-size:10px;color:#666;text-transform:uppercase;font-weight:bold;}.returned-row{background-color:#ffe0e0;}@media print{body{padding:0;}button{display:none;}}</style>
+    </head><body>${printArea.innerHTML}</body></html>
+  `);
+  printWindow.document.close();
+  setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+}
+
+// ==================== PURCHASE FUNCTIONS ====================
+function getProductPurchaseHistory() {
+  const history = {};
+  purchaseRecords.forEach(record => {
+    history[record.product] = {
+      code: record.code, buyRate: record.buy, sellRate: record.rate,
+      company: record.company, batch: record.batch, expiry: record.expiry
+    };
+  });
+  return history;
+}
+
+function autoFillPurchaseCode() {
+  const product = document.getElementById("purchaseProduct").value.trim();
+  const codeField = document.getElementById("purchaseCode");
+  const box = document.getElementById("purchaseSuggestionBox");
+  if (product.length >= 2) { showPurchaseSuggestions(); } else { box.style.display = "none"; }
+  if (productCodes[product]) {
+    codeField.value = productCodes[product];
+    autoFillPurchaseDetails(product);
+  } else if (product !== "") {
+    const newCode = generateNewPurchaseCode();
+    productCodes[product] = newCode;
+    codeField.value = newCode;
+  } else { codeField.value = ""; }
+}
+
+function autoFillPurchaseDetails(productName) {
+  const history = getProductPurchaseHistory();
+  const details = history[productName];
+  if (details) {
+    document.getElementById("purchaseCode").value = details.code;
+    document.getElementById("purchaseBuy").value = details.buyRate;
+    document.getElementById("purchaseRate").value = details.sellRate;
+    document.getElementById("purchaseCompany").value = details.company;
+    document.getElementById("purchaseBatch").value = details.batch;
+    if (details.expiry && details.expiry !== '-') {
+      document.getElementById("purchaseExpiry").value = details.expiry;
+    }
+    updatePurchaseTotal();
+    showBatchNotification(`📝 Auto-filled details for ${productName}`, 'info');
+  }
+}
+
+function generateNewPurchaseCode() {
+  const existing = Object.values(productCodes).map(Number);
+  const max = existing.length ? Math.max(...existing) : 1000;
+  return (max + 1).toString();
+}
+
+function updatePurchaseTotal() {
+  const qty = parseFloat(document.getElementById("purchaseQty").value);
+  const rate = parseFloat(document.getElementById("purchaseRate").value);
+  const total = !isNaN(qty) && !isNaN(rate) ? qty * rate : 0;
+  document.getElementById("purchaseTotalBox").innerText = "Total Amount: Rs. " + total.toFixed(2);
+}
+
+async function savePurchaseData() {
+  const product = document.getElementById("purchaseProduct").value.trim();
+  const code = document.getElementById("purchaseCode").value;
+  const qty = parseFloat(document.getElementById("purchaseQty").value);
+  const rate = parseFloat(document.getElementById("purchaseRate").value);
+  const total = qty * rate;
+  const buy = document.getElementById("purchaseBuy").value;
+  const company = document.getElementById("purchaseCompany").value || "-";
+  const batch = document.getElementById("purchaseBatch").value || "B" + Date.now().toString().slice(-6);
+  const expiry = document.getElementById("purchaseExpiry").value || "-";
+  const date = new Date().toISOString().split('T')[0];
+  
+  if (!product || !code || isNaN(qty) || isNaN(rate) || !buy) {
+    alert("Please fill all required fields!");
+    return;
+  }
+  
+  const purchaseEntry = { 
+    id: Date.now(),
+    no: purchaseRecords.length + 1, 
+    code, product, qty, rate, total, 
+    buy: parseFloat(buy), company, batch,
+    expiry, date 
+  };
+  
+  purchaseRecords.push(purchaseEntry);
+  await saveToDB('purchases', purchaseEntry);
+  
+  const batchId = `${code}_${batch}_${date}`;
+  const existingBatch = batchStock.find(b => b.batchId === batchId);
+  if (existingBatch) {
+    existingBatch.purchaseQty += qty;
+    existingBatch.available = existingBatch.purchaseQty - existingBatch.soldQty;
+    existingBatch.rate = rate;
+  } else {
+    batchStock.push({
+      batchId, product, code, batch, rate,
+      buyRate: parseFloat(buy),
+      purchaseQty: qty, soldQty: 0, available: qty,
+      expiry, company, date
+    });
+  }
+  
+  const existingProduct = productRecords.find(p => p.code === code);
+  if (existingProduct) {
+    existingProduct.rate = rate;
+    await saveToDB('products', existingProduct);
+  } else {
+    const newProduct = {
+      no: productRecords.length + 1,
+      code, product, rate,
+      batch: batch,
+      exp: expiry !== "-" ? new Date(expiry).toLocaleDateString('en-GB') : "12/2025"
+    };
+    productRecords.push(newProduct);
+    await saveToDB('products', newProduct);
+  }
+  
+  await saveAllBatchStockData();
+  updateStorageInfo();
+  clearPurchaseForm();
+  filterPurchaseData();
+  updateInventoryData();
+  showBatchNotification(`✅ Purchase saved! ${qty} units of ${product} added.`, "success");
+}
+
+function clearPurchaseForm() {
+  document.getElementById("purchaseProduct").value = "";
+  document.getElementById("purchaseCode").value = "";
+  document.getElementById("purchaseQty").value = "";
+  document.getElementById("purchaseRate").value = "";
+  document.getElementById("purchaseTotalBox").innerText = "Total Amount: Rs. 0";
+  document.getElementById("purchaseBuy").value = "";
+  document.getElementById("purchaseCompany").value = "";
+  document.getElementById("purchaseBatch").value = "";
+  document.getElementById("purchaseExpiry").value = "";
+  document.getElementById("purchaseSuggestionBox").style.display = "none";
+}
+
+function loadPurchaseRecords() { filterPurchaseData(); }
+
+function filterPurchaseData() {
+  const keyword = document.getElementById("purchaseSearch") ? document.getElementById("purchaseSearch").value.toLowerCase() : "";
+  const months = parseInt(document.getElementById("purchaseExpiryFilter").value);
+  const now = new Date();
+  
+  const filtered = purchaseRecords.filter(r => {
+    const matchKeyword = r.product.toLowerCase().includes(keyword) ||
+      r.company.toLowerCase().includes(keyword) ||
+      r.code.toLowerCase().includes(keyword) ||
+      r.date.includes(keyword);
+    let matchExpiry = true;
+    if (!isNaN(months) && r.expiry !== "-") {
+      const expDate = new Date(r.expiry);
+      const future = new Date();
+      future.setMonth(now.getMonth() + months);
+      matchExpiry = expDate <= future;
+    }
+    return matchKeyword && matchExpiry;
+  });
+  renderPurchaseTable(filtered);
+}
+
+function renderPurchaseTable(data) {
+  const tbody = document.getElementById("purchaseTableBody");
+  tbody.innerHTML = "";
+  data.forEach(r => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${r.no}</td><td>${r.code}</td><td>${r.product}</td>
+      <td>${r.qty}</td><td>${r.rate}</td>
+      <td>${(r.total || r.qty * r.rate).toFixed(2)}</td>
+      <td>${r.buy}</td><td>${r.company}</td><td>${r.batch || 'N/A'}</td>
+      <td>${r.expiry}</td><td>${r.date}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+function showPurchaseSuggestions() {
+  const input = document.getElementById("purchaseProduct");
+  const query = input.value.trim().toLowerCase();
+  const box = document.getElementById("purchaseSuggestionBox");
+  box.innerHTML = "";
+  if (query.length < 2) { box.style.display = "none"; return; }
+  
+  const allProducts = new Set();
+  Object.keys(productCodes).forEach(p => { if (p.toLowerCase().includes(query)) allProducts.add(p); });
+  productRecords.forEach(p => { if (p.product.toLowerCase().includes(query)) allProducts.add(p.product); });
+  purchaseRecords.forEach(p => { if (p.product.toLowerCase().includes(query)) allProducts.add(p.product); });
+  
+  const matches = Array.from(allProducts).slice(0, 10);
+  if (matches.length > 0) {
+    const history = getProductPurchaseHistory();
+    matches.forEach(product => {
+      const item = document.createElement("div");
+      const details = history[product];
+      if (details) {
+        item.innerHTML = `<strong>${product}</strong> - Buy: Rs.${details.buyRate} | Sell: Rs.${details.sellRate} | ${details.company}`;
+      } else { item.textContent = product; }
+      item.style.padding = "8px";
+      item.style.cursor = "pointer";
+      item.onmousedown = () => {
+        input.value = product;
+        autoFillPurchaseCode();
+        autoFillPurchaseDetails(product);
+        box.style.display = "none";
+      };
+      box.appendChild(item);
+    });
+    box.style.display = "block";
+  } else { box.style.display = "none"; }
+}
+
+// ==================== PURCHASE A4 PRINT ====================
+function printPurchaseA4() {
+  const printWindow = window.open('', '_blank', 'width=1200,height=700');
+  const companyName = document.querySelector(".info strong").innerText || "QASIR MEDICOSE";
+  const companyAddress = document.querySelector(".info div:nth-child(2)")?.innerText || "SHENE KALY DARRA";
+  const companyPhone = document.querySelector(".info div:nth-child(4)")?.innerText.replace("Phone: ", "") || "0318-9776178";
+  
+  const filteredData = purchaseRecords;
+  const totalAmount = filteredData.reduce((sum, r) => sum + r.total, 0);
+  
+  printWindow.document.write(`
+    <html>
+    <head>
+      <title>Purchase Records - A4 Print</title>
+      <style>
+        body { font-family: Arial, sans-serif; padding: 20px; font-size: 12px; }
+        .purchase-print-header { display: flex; justify-content: space-between; margin-bottom: 20px; padding: 10px; border-bottom: 2px solid #4CAF50; }
+        .purchase-print-company { font-size: 16px; font-weight: bold; }
+        .purchase-print-title { font-size: 18px; font-weight: bold; color: #4CAF50; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th { background: #4CAF50; color: white; padding: 10px 8px; font-size: 11px; }
+        td { border: 1px solid #ddd; padding: 8px; text-align: center; font-size: 11px; }
+        tr:nth-child(even) { background: #f9f9f9; }
+        .total-row { background: #e8f5e9; font-weight: bold; }
+        .print-date { text-align: right; margin-bottom: 10px; font-size: 11px; color: #666; }
+        @media print { 
+          body { padding: 0; }
+          button { display: none; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="purchase-print-header">
+        <div class="purchase-print-company">
+          ${companyName}<br>
+          ${companyAddress}<br>
+          Phone: ${companyPhone}
+        </div>
+        <div class="purchase-print-title">PURCHASE RECORDS</div>
+      </div>
+      <div class="print-date">Print Date: ${new Date().toLocaleDateString('en-GB')}</div>
+      <table>
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Code</th>
+            <th>Product</th>
+            <th>Qty</th>
+            <th>Sell Rate</th>
+            <th>Total</th>
+            <th>Buy Rate</th>
+            <th>Company</th>
+            <th>Batch</th>
+            <th>Expiry</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${filteredData.map(r => `
+            <tr>
+              <td>${r.no}</td>
+              <td>${r.code}</td>
+              <td>${r.product}</td>
+              <td>${r.qty}</td>
+              <td>Rs. ${r.rate}</td>
+              <td>Rs. ${r.total.toFixed(2)}</td>
+              <td>Rs. ${r.buy}</td>
+              <td>${r.company}</td>
+              <td>${r.batch || 'N/A'}</td>
+              <td>${r.expiry}</td>
+              <td>${r.date}</td>
+            </tr>
+          `).join('')}
+          <tr class="total-row">
+            <td colspan="5"><strong>TOTAL</strong></td>
+            <td><strong>Rs. ${totalAmount.toFixed(2)}</strong></td>
+            <td colspan="5"></td>
+          </tr>
+        </tbody>
+      </table>
+    </body>
+    </html>
+  `);
+  printWindow.document.close();
+  setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+}
+
+function generatePurchasePDF() {
+  generateFullPagePDF('purchaseSection', 'purchase_records_' + new Date().toISOString().slice(0,10) + '.pdf');
+}
+
+// ==================== BATCH STOCK DISPLAY ====================
+function displayBatchStock() {
+  const search = document.getElementById("batchSearchTerm") ? document.getElementById("batchSearchTerm").value.toLowerCase() : "";
+  const tbody = document.getElementById("batchStockBody");
+  tbody.innerHTML = "";
+  
+  const filtered = batchStock.filter(b => !search || b.product.toLowerCase().includes(search) || b.code.includes(search))
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;">No batch stock found. Add purchases first.</td></tr>`;
+    return;
+  }
+  
+  filtered.forEach(b => {
+    const status = b.available <= 0 ? 'Out of Stock' : b.available < 5 ? 'Low Stock' : 'In Stock';
+    const rowClass = b.available <= 0 ? 'batch-stock-out' : b.available < 5 ? 'batch-stock-low' : '';
+    const row = document.createElement("tr");
+    row.className = rowClass;
+    row.innerHTML = `
+      <td><strong>${b.product}</strong></td>
+      <td>${b.batch}</td>
+      <td>Rs. ${b.rate}</td>
+      <td>${b.purchaseQty}</td>
+      <td>${b.soldQty}</td>
+      <td><strong>${b.available}</strong></td>
+      <td>${b.expiry}</td>
+      <td>${status}</td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+// ==================== BATCH STOCK SAVE ====================
+async function saveAllBatchStockData() {
+  try {
+    const existing = await getAllFromDB('batchStock');
+    for (const item of existing) { await deleteFromDB('batchStock', item.batchId); }
+    for (const batch of batchStock) { await saveToDB('batchStock', batch); }
+  } catch (e) { console.error('Error saving batch stock:', e); }
+}
+
+// ==================== COMPANY RETURN FUNCTIONS ====================
+function showCompanyReturnSuggestions() {
+  const input = document.getElementById("companyReturnProduct");
+  const query = input.value.trim().toLowerCase();
+  const box = document.getElementById("companyReturnSuggestionBox");
+  box.innerHTML = "";
+  if (query.length < 2) { box.style.display = "none"; return; }
+  
+  const allProducts = new Set();
+  batchStock.forEach(b => {
+    if (b.product.toLowerCase().includes(query)) {
+      allProducts.add(JSON.stringify({ product: b.product, rate: b.rate, available: b.available }));
+    }
+  });
+  
+  const matches = Array.from(allProducts).map(s => JSON.parse(s)).slice(0, 10);
+  if (matches.length > 0) {
+    matches.forEach(item => {
+      const div = document.createElement("div");
+      div.innerHTML = `<strong>${item.product}</strong> - Rate: Rs.${item.rate} | Available: ${item.available}`;
+      div.style.padding = "8px";
+      div.style.cursor = "pointer";
+      div.onmousedown = () => {
+        document.getElementById("companyReturnProduct").value = item.product;
+        document.getElementById("companyReturnRate").value = item.rate;
+        document.getElementById("companyReturnQty").value = "";
+        document.getElementById("companyReturnTotalBox").innerText = "Total Amount: Rs. 0";
+        box.style.display = "none";
+        document.getElementById("companyReturnQty").focus();
+      };
+      box.appendChild(div);
+    });
+    box.style.display = "block";
+  } else { box.style.display = "none"; }
+}
+
+function updateCompanyReturnTotal() {
+  const qty = parseFloat(document.getElementById("companyReturnQty").value);
+  const rate = parseFloat(document.getElementById("companyReturnRate").value);
+  const total = !isNaN(qty) && !isNaN(rate) ? qty * rate : 0;
+  document.getElementById("companyReturnTotalBox").innerText = "Total Amount: Rs. " + total.toFixed(2);
+}
+
+async function saveCompanyReturn() {
+  const date = document.getElementById("companyReturnDate").value;
+  const product = document.getElementById("companyReturnProduct").value.trim();
+  const rate = parseFloat(document.getElementById("companyReturnRate").value);
+  const qty = parseFloat(document.getElementById("companyReturnQty").value);
+  const total = rate * qty;
+  
+  if (!date || !product || isNaN(rate) || isNaN(qty) || qty <= 0) { alert("Please fill all fields correctly!"); return; }
+  
+  const batches = batchStock.filter(b => b.product.toLowerCase() === product.toLowerCase() && b.available > 0)
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  if (batches.length === 0) { alert(`No available stock for ${product}!`); return; }
+  const totalAvailable = batches.reduce((sum, b) => sum + b.available, 0);
+  if (qty > totalAvailable) { alert(`Insufficient stock! Only ${totalAvailable} units available.`); return; }
+  
+  let remaining = qty;
+  let returnedDetails = [];
+  for (const batch of batches) {
+    if (remaining <= 0) break;
+    const fromBatch = Math.min(batch.available, remaining);
+    returnedDetails.push({ batchId: batch.batchId, batch: batch.batch, qty: fromBatch, rate: batch.rate });
+    batch.available -= fromBatch;
+    batch.soldQty += fromBatch;
+    remaining -= fromBatch;
+  }
+  
+  const returnRecord = { id: Date.now(), date, product, rate, qty, total, company: batches[0]?.company || "-", details: returnedDetails };
+  companyReturnRecords.push(returnRecord);
+  await saveToDB('companyReturns', returnRecord);
+  await saveAllBatchStockData();
+  updateInventoryData();
+  updateStorageInfo();
+  
+  document.getElementById("companyReturnProduct").value = "";
+  document.getElementById("companyReturnRate").value = "";
+  document.getElementById("companyReturnQty").value = "";
+  document.getElementById("companyReturnTotalBox").innerText = "Total Amount: Rs. 0";
+  document.getElementById("companyReturnDate").value = new Date().toISOString().split('T')[0];
+  
+  loadCompanyReturns();
+  showBatchNotification(`✅ Company return saved! ${qty} units of ${product} returned.`, "success");
+}
+
+function loadCompanyReturns() { filterCompanyReturns(); }
+
+function filterCompanyReturns() {
+  const search = document.getElementById("companyReturnSearch") ? document.getElementById("companyReturnSearch").value.toLowerCase() : "";
+  const filtered = companyReturnRecords.filter(r => !search || r.product.toLowerCase().includes(search) || r.date.includes(search))
+    .sort((a, b) => new Date(b.date) - new Date(a.date));
+  
+  const tbody = document.getElementById("companyReturnTableBody");
+  tbody.innerHTML = "";
+  if (filtered.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;">No returns found.</td></tr>`;
+    return;
+  }
+  
+  filtered.forEach(r => {
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${r.date}</td>
+      <td><strong>${r.product}</strong></td>
+      <td>Rs. ${r.rate.toFixed(2)}</td>
+      <td>${r.qty}</td>
+      <td>Rs. ${r.total.toFixed(2)}</td>
+      <td><button onclick="deleteCompanyReturn(${r.id})" class="records-button" style="background:#f44336;">🗑️ Delete</button></td>
+    `;
+    tbody.appendChild(row);
+  });
+}
+
+async function deleteCompanyReturn(id) {
+  if (!confirm("Are you sure you want to delete this return? Stock will be restored.")) return;
+  const index = companyReturnRecords.findIndex(r => r.id === id);
+  if (index >= 0) {
+    const record = companyReturnRecords[index];
+    if (record.details) {
+      record.details.forEach(detail => {
+        const batch = batchStock.find(b => b.batchId === detail.batchId);
+        if (batch) { batch.available += detail.qty; batch.soldQty -= detail.qty; }
+      });
+    }
+    companyReturnRecords.splice(index, 1);
+    await deleteFromDB('companyReturns', id);
+    await saveAllBatchStockData();
+    updateInventoryData();
+    loadCompanyReturns();
+    showBatchNotification("✅ Return deleted and stock restored!", "success");
+  }
+}
+
+function printCompanyReturnA4() {
+  const printWindow = window.open('', '_blank', 'width=900,height=700');
+  const records = companyReturnRecords.sort((a, b) => new Date(b.date) - new Date(a.date));
+  let totalAmount = records.reduce((sum, r) => sum + r.total, 0);
+  
+  printWindow.document.write(`
+    <html><head><title>Company Returns - A4 Print</title>
+    <style>body{font-family:Arial,sans-serif;padding:20px;}h2{text-align:center;color:#9c27b0;}table{width:100%;border-collapse:collapse;margin-top:20px;}th,td{border:1px solid #ddd;padding:10px;text-align:center;}th{background:#9c27b0;color:white;}.total-row{background:#f3e5f5;font-weight:bold;}.company-info{text-align:center;margin-bottom:20px;}@media print{body{padding:0;}button{display:none;}}</style>
+    </head><body>
+    <div class="company-info"><h2>${document.querySelector(".info strong").innerText}</h2><p>${document.querySelector(".info div:nth-child(2)").innerText}</p><p>Phone: ${document.querySelector(".info div:nth-child(4)").innerText.replace("Phone: ", "")}</p></div>
+    <h2>🔄 COMPANY RETURNS REPORT</h2>
+    <p>Date: ${new Date().toLocaleDateString('en-GB')}</p>
+    <table><thead><tr><th>Date</th><th>Product</th><th>Rate</th><th>Qty</th><th>Total</th></tr></thead>
+    <tbody>${records.map(r => `<tr><td>${r.date}</td><td>${r.product}</td><td>Rs. ${r.rate.toFixed(2)}</td><td>${r.qty}</td><td>Rs. ${r.total.toFixed(2)}</td></tr>`).join('')}
+    <tr class="total-row"><td colspan="4"><strong>TOTAL</strong></td><td><strong>Rs. ${totalAmount.toFixed(2)}</strong></td></tr>
+    </tbody></table></body></html>
+  `);
+  printWindow.document.close();
+  setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+}
+
+function thermalPrintCompanyReturn() {
+  const date = document.getElementById("companyReturnDate").value;
+  const product = document.getElementById("companyReturnProduct").value.trim();
+  const rate = document.getElementById("companyReturnRate").value;
+  const qty = document.getElementById("companyReturnQty").value;
+  const total = document.getElementById("companyReturnTotalBox").innerText.replace("Total Amount: Rs. ", "");
+  
+  if (!product || !qty || !rate) { alert("Please fill all fields before printing!"); return; }
+  
+  const companyName = document.querySelector(".info strong").innerText;
+  const companyPhone = document.querySelector(".info div:nth-child(4)").innerText.replace("Phone: ", "");
+  
+  const thermalContent = `
+    <div style="font-family:'Arial',Arial Black,sans-serif;font-size:14px;font-weight:bold;width:80mm;padding:5px;">
+      <div style="text-align:center;font-size:18px;">${companyName.toUpperCase()}</div>
+      <div style="text-align:center;font-size:12px;">Phone: ${companyPhone}</div>
+      <div style="border-top:2px dashed #000;margin:5px 0;"></div>
+      <div style="text-align:center;font-size:16px;">COMPANY RETURN</div>
+      <div style="border-top:2px dashed #000;margin:5px 0;"></div>
+      <div><strong>Date:</strong> ${date}</div>
+      <div><strong>Product:</strong> ${product}</div>
+      <div style="border-top:2px dashed #000;margin:5px 0;"></div>
+      <table style="width:100%;border-collapse:collapse;font-size:13px;">
+        <tr><td style="text-align:left;"><strong>Rate:</strong></td><td style="text-align:right;">Rs. ${rate}</td></tr>
+        <tr><td style="text-align:left;"><strong>Quantity:</strong></td><td style="text-align:right;">${qty}</td></tr>
+        <tr><td style="text-align:left;font-size:16px;"><strong>TOTAL:</strong></td><td style="text-align:right;font-size:16px;">Rs. ${total}</td></tr>
+      </table>
+      <div style="border-top:2px dashed #000;margin:5px 0;"></div>
+      <div style="text-align:center;font-size:11px;">Return acknowledged</div>
+      <div style="text-align:center;margin-top:15px;">Signature: _______________</div>
+    </div>
+  `;
+  
+  const printWindow = window.open('', '_blank', 'width=400,height=600');
+  if (printWindow) {
+    printWindow.document.write(`
+      <html><head><title>Company Return - Thermal Print</title>
+      <style>@page{size:80mm auto;margin:2mm;}body{margin:0;background:#fff;}</style>
+      </head><body>${thermalContent}</body></html>
+    `);
+    printWindow.document.close();
+    setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+  }
+}
+
+// ==================== INVENTORY FUNCTIONS ====================
+async function updateInventoryData() {
+  inventoryData = {};
+  
+  purchaseRecords.forEach(purchase => {
+    if (!inventoryData[purchase.product]) {
+      inventoryData[purchase.product] = { company: purchase.company, price: parseFloat(purchase.rate), buyRate: parseFloat(purchase.buy), purchases: [], sales: [], customerReturns: [], companyReturns: [] };
+    }
+    inventoryData[purchase.product].purchases.push({ qty: parseFloat(purchase.qty), date: purchase.date });
+  });
+  
+  savedInvoices.forEach(invoice => {
+    if (invoice.type === "sale") {
+      invoice.products.forEach(product => {
+        if (!inventoryData[product.item]) {
+          inventoryData[product.item] = { company: "-", price: parseFloat(product.rate), buyRate: 0, purchases: [], sales: [], customerReturns: [], companyReturns: [] };
+        }
+        let formattedDate = invoice.invDate;
+        if (invoice.invDate.includes('/')) {
+          const parts = invoice.invDate.split('/');
+          if (parts.length === 3) { formattedDate = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`; }
+        }
+        inventoryData[product.item].sales.push({ qty: parseFloat(product.qty), rate: parseFloat(product.rate), amount: parseFloat(product.total), date: formattedDate });
+        if (product.returnedQty > 0) {
+          let returnDateStr = product.returnDate;
+          if (returnDateStr.includes('/')) {
+            const parts = returnDateStr.split('/');
+            if (parts.length === 3) { returnDateStr = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`; }
+          }
+          inventoryData[product.item].customerReturns.push({ qty: parseFloat(product.returnedQty), date: returnDateStr });
+        }
+      });
+    }
+  });
+  
+  companyReturnRecords.forEach(ret => {
+    if (!inventoryData[ret.product]) {
+      inventoryData[ret.product] = { company: ret.company || "-", price: 0, buyRate: 0, purchases: [], sales: [], customerReturns: [], companyReturns: [] };
+    }
+    inventoryData[ret.product].companyReturns.push({ qty: parseFloat(ret.qty), date: ret.date });
+  });
+}
+
+function calculateInventory() {
+  const search = document.getElementById("searchTerm").value.toLowerCase();
+  const startDateStr = document.getElementById("startDate").value;
+  const closingDateStr = document.getElementById("closingDateInv").value;
+  const tbody = document.getElementById("inventoryBody");
+  const tfoot = document.getElementById("inventoryFooter");
+  tbody.innerHTML = "";
+  tfoot.innerHTML = "";
+  
+  let no = 1, hasData = false;
+  let totalPurchaseAmount = 0, totalSaleAmount = 0, totalAvailableQtyAmount = 0, totalOpenQtyAmount = 0;
+  const productSummary = {};
+  
+  batchStock.forEach(b => {
+    if (!productSummary[b.product]) {
+      productSummary[b.product] = {
+        company: b.company, buyRate: b.buyRate || 0,
+        totalPurchaseQty: 0, totalPurchaseBeforeStart: 0, totalPurchaseInRange: 0,
+        totalSaleQty: 0, totalSaleBeforeStart: 0, totalSaleInRange: 0,
+        totalSaleAmountInRange: 0,
+        customerReturnsBeforeStart: 0, customerReturnsInRange: 0,
+        companyReturnsBeforeStart: 0, companyReturnsInRange: 0,
+        currentPrice: b.rate, batches: []
+      };
+    }
+    const batchDate = b.date ? new Date(b.date + 'T00:00:00') : null;
+    const startDate = startDateStr ? new Date(startDateStr + 'T00:00:00') : null;
+    const closingDate = closingDateStr ? new Date(closingDateStr + 'T23:59:59') : null;
+    
+    productSummary[b.product].totalPurchaseQty += b.purchaseQty;
+    if (startDate && batchDate && batchDate < startDate) { productSummary[b.product].totalPurchaseBeforeStart += b.purchaseQty; }
+    
+    let inRange = true;
+    if (startDate && batchDate && batchDate < startDate) inRange = false;
+    if (closingDate && batchDate && batchDate > closingDate) inRange = false;
+    if (!startDateStr && !closingDateStr) inRange = true;
+    if (inRange) { productSummary[b.product].totalPurchaseInRange += b.purchaseQty; }
+    if (b.rate > productSummary[b.product].currentPrice) { productSummary[b.product].currentPrice = b.rate; }
+    if (b.buyRate > productSummary[b.product].buyRate) { productSummary[b.product].buyRate = b.buyRate; }
+  });
+  
+  savedInvoices.forEach(invoice => {
+    if (invoice.type === "sale") {
+      const invDate = parseDate(invoice.invDate);
+      if (!invDate) return;
+      invDate.setHours(0,0,0,0);
+      const startDate = startDateStr ? new Date(startDateStr + 'T00:00:00') : null;
+      const closingDate = closingDateStr ? new Date(closingDateStr + 'T23:59:59') : null;
+      
+      invoice.products.forEach(product => {
+        if (!productSummary[product.item]) {
+          productSummary[product.item] = {
+            company: "-", buyRate: 0,
+            totalPurchaseQty: 0, totalPurchaseBeforeStart: 0, totalPurchaseInRange: 0,
+            totalSaleQty: 0, totalSaleBeforeStart: 0, totalSaleInRange: 0,
+            totalSaleAmountInRange: 0,
+            customerReturnsBeforeStart: 0, customerReturnsInRange: 0,
+            companyReturnsBeforeStart: 0, companyReturnsInRange: 0,
+            currentPrice: parseFloat(product.rate) || 0, batches: []
+          };
+        }
+        const soldQty = parseFloat(product.qty) || 0;
+        productSummary[product.item].totalSaleQty += soldQty;
+        if (startDate && invDate < startDate) { productSummary[product.item].totalSaleBeforeStart += soldQty; }
+        
+        let inRange = true;
+        if (startDate && invDate < startDate) inRange = false;
+        if (closingDate && invDate > closingDate) inRange = false;
+        if (!startDateStr && !closingDateStr) inRange = true;
+        if (inRange) {
+          productSummary[product.item].totalSaleInRange += soldQty;
+          productSummary[product.item].totalSaleAmountInRange += (parseFloat(product.total) || 0);
+        }
+        
+        const returnedQty = parseFloat(product.returnedQty) || 0;
+        if (returnedQty > 0) {
+          let returnDate = null;
+          if (product.returnDate && product.returnDate !== "-") {
+            returnDate = parseDate(product.returnDate);
+            if (returnDate) returnDate.setHours(0,0,0,0);
+          }
+          if (startDate && returnDate && returnDate < startDate) { productSummary[product.item].customerReturnsBeforeStart += returnedQty; }
+          let returnInRange = true;
+          if (startDate && returnDate && returnDate < startDate) returnInRange = false;
+          if (closingDate && returnDate && returnDate > closingDate) returnInRange = false;
+          if (!startDateStr && !closingDateStr) returnInRange = true;
+          if (returnInRange) { productSummary[product.item].customerReturnsInRange += returnedQty; }
+        }
+      });
+    }
+  });
+  
+  companyReturnRecords.forEach(ret => {
+    if (!productSummary[ret.product]) {
+      productSummary[ret.product] = {
+        company: ret.company || "-", buyRate: 0,
+        totalPurchaseQty: 0, totalPurchaseBeforeStart: 0, totalPurchaseInRange: 0,
+        totalSaleQty: 0, totalSaleBeforeStart: 0, totalSaleInRange: 0,
+        totalSaleAmountInRange: 0,
+        customerReturnsBeforeStart: 0, customerReturnsInRange: 0,
+        companyReturnsBeforeStart: 0, companyReturnsInRange: 0,
+        currentPrice: 0, batches: []
+      };
+    }
+    const returnDate = new Date(ret.date + 'T00:00:00');
+    const startDate = startDateStr ? new Date(startDateStr + 'T00:00:00') : null;
+    const closingDate = closingDateStr ? new Date(closingDateStr + 'T23:59:59') : null;
+    
+    if (startDate && returnDate < startDate) { productSummary[ret.product].companyReturnsBeforeStart += parseFloat(ret.qty); }
+    let inRange = true;
+    if (startDate && returnDate < startDate) inRange = false;
+    if (closingDate && returnDate > closingDate) inRange = false;
+    if (!startDateStr && !closingDateStr) inRange = true;
+    if (inRange) { productSummary[ret.product].companyReturnsInRange += parseFloat(ret.qty); }
+  });
+  
+  for (let product in productSummary) {
+    const item = productSummary[product];
+    const isMatch = (!search || product.toLowerCase().includes(search) || item.company.toLowerCase().includes(search));
+    if (!isMatch) continue;
+    hasData = true;
+    
+    const openQty = item.totalPurchaseBeforeStart - item.totalSaleBeforeStart - item.companyReturnsBeforeStart + item.customerReturnsBeforeStart;
+    const totalPurchase = item.totalPurchaseInRange;
+    const totalSaleQty = item.totalSaleInRange;
+    const availableQty = openQty + item.totalPurchaseInRange - item.totalSaleInRange - item.companyReturnsInRange + item.customerReturnsInRange;
+    const purchaseAmount = totalPurchase * item.buyRate;
+    const saleAmount = item.totalSaleAmountInRange;
+    const availableAmount = availableQty * item.currentPrice;
+    const openQtyAmount = openQty * item.currentPrice;
+    
+    totalPurchaseAmount += purchaseAmount;
+    totalSaleAmount += saleAmount;
+    totalAvailableQtyAmount += availableAmount;
+    totalOpenQtyAmount += openQtyAmount;
+    
+    const row = document.createElement("tr");
+    row.innerHTML = `
+      <td>${no++}</td>
+      <td>${product}</td>
+      <td>${item.company}</td>
+      <td>Rs. ${item.buyRate.toFixed(2)}</td>
+      <td>Rs. ${item.currentPrice.toFixed(2)}</td>
+      <td class="open-qty-cell">${openQty}</td>
+      <td>${totalPurchase}</td>
+      <td>${totalSaleQty}</td>
+      <td>Rs. ${saleAmount.toFixed(2)}</td>
+      <td>${item.customerReturnsInRange}</td>
+      <td>${item.companyReturnsInRange}</td>
+      <td class="available-qty-cell">${availableQty}</td>
+    `;
+    tbody.appendChild(row);
+  }
+  
+  if (!hasData) {
+    tbody.innerHTML = `<tr><td colspan="12" style="text-align:center;padding:20px;">No products found. Please add purchases and sales first.</td></tr>`;
+  } else {
+    tfoot.innerHTML = `
+      <tr class="inventory-totals-row">
+        <td colspan="5" style="text-align:right;"><strong>📊 TOTALS:</strong></td>
+        <td><strong>Open Value:</strong><br>Rs. ${totalOpenQtyAmount.toFixed(2)}</td>
+        <td><strong>Purchase Value:</strong><br>Rs. ${totalPurchaseAmount.toFixed(2)}</td>
+        <td></td>
+        <td><strong>Sale Value:</strong><br>Rs. ${totalSaleAmount.toFixed(2)}</td>
+        <td></td>
+        <td></td>
+        <td><strong>Available Value:</strong><br>Rs. ${totalAvailableQtyAmount.toFixed(2)}</td>
+      </tr>
+    `;
+  }
+}
+
+function printInventory() {
+  const printArea = document.getElementById("inventoryPrintArea");
+  const printWindow = window.open('', '_blank', 'width=1200,height=700');
+  printWindow.document.write(`
+    <html><head><title>Inventory Summary Print</title>
+    <style>body{font-family:Arial,sans-serif;padding:20px;}table{width:100%;border-collapse:collapse;font-size:10px;margin-top:10px;}th,td{border:1px solid #ddd;padding:5px;text-align:center;}th{background:#4CAF50;color:white;}.inventory-totals-row{background:#e8f5e9;font-weight:bold;font-size:11px;}.inventory-totals-row td{border-top:3px solid #4CAF50 !important;padding:8px 5px !important;}.open-qty-cell{background:#e3f2fd;font-weight:bold;}.available-qty-cell{background:#c8e6c9;font-weight:bold;}h2{text-align:center;}@media print{body{padding:0;}button{display:none;}}</style>
+    </head><body>${printArea.innerHTML}</body></html>
+  `);
+  printWindow.document.close();
+  setTimeout(() => { printWindow.print(); setTimeout(() => { printWindow.close(); }, 500); }, 300);
+}
+
+// ==================== PDF GENERATION (FULL PAGE CAPTURE) ====================
+function generateFullPagePDF(elementId, filename) {
+  const element = document.getElementById(elementId);
+  html2canvas(element, {
+    scale: 2,
+    useCORS: true,
+    scrollY: 0,
+    windowHeight: element.scrollHeight,
+    height: element.scrollHeight
+  }).then(canvas => {
+    const imgData = canvas.toDataURL('image/png');
+    const pdf = new jsPDF('p', 'mm', 'a4');
+    const imgWidth = 210;
+    const pageHeight = 295;
+    const imgHeight = canvas.height * imgWidth / canvas.width;
+    let heightLeft = imgHeight;
+    let position = 0;
+    pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+    heightLeft -= pageHeight;
+    while (heightLeft >= 0) {
+      position = heightLeft - imgHeight;
+      pdf.addPage();
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+    }
+    pdf.save(filename);
+  });
+}
+
+function generateInvoicePDF() {
+  generateFullPagePDF('invoiceSection', 'invoice_' + document.getElementById("invNo").value + '.pdf');
+}
+
+function generateRecordsPDF() {
+  generateFullPagePDF('recordsPrintArea', 'sales_records_' + new Date().toISOString().slice(0,10) + '.pdf');
+}
+
+function generateInventoryPDF() {
+  generateFullPagePDF('inventoryPrintArea', 'inventory_summary_' + new Date().toISOString().slice(0,10) + '.pdf');
+}
+
+// ==================== LOAD DATA ====================
+function updateStorageInfo() {
+  const totalItems = savedInvoices.length + purchaseRecords.length + customerList.length + productRecords.length + batchStock.length + companyReturnRecords.length;
+  document.getElementById("dataCount").textContent = totalItems;
+}
+
+async function loadAllDataFromDB() {
+  try {
+    const invoices = await getAllFromDB('invoices');
+    if (invoices.length > 0) {
+      savedInvoices = invoices;
+      const maxInvNo = Math.max(...savedInvoices.map(inv => parseInt(inv.invNo) || 0));
+      currentInvoiceNumber = maxInvNo + 1;
+    }
+    
+    const purchases = await getAllFromDB('purchases');
+    if (purchases.length > 0) {
+      purchaseRecords = purchases;
+      const batchData = await getAllFromDB('batchStock');
+      if (batchData.length > 0) { batchStock = batchData; }
+      else { rebuildBatchStockFromPurchases(); }
+    }
+    
+    const companyReturns = await getAllFromDB('companyReturns');
+    if (companyReturns.length > 0) { companyReturnRecords = companyReturns; }
+    
+    const customers = await getAllFromDB('customers');
+    if (customers.length > 0) {
+      customerList = customers;
+      customerCounter = Math.max(...customerList.map(c => parseInt(c.id) || 0)) + 1;
+    }
+    
+    const products = await getAllFromDB('products');
+    if (products.length > 0) {
+      productRecords = products;
+      productCodes = {};
+      products.forEach(p => { productCodes[p.product] = p.code; });
+    }
+    
+    const settings = await getAllFromDB('settings');
+    const customerHistorySetting = settings.find(s => s.key === 'customerProductHistory');
+    if (customerHistorySetting) { customerProductHistory = customerHistorySetting.value; }
+    const invCounterSetting = settings.find(s => s.key === 'invoiceCounter');
+    if (invCounterSetting) { currentInvoiceNumber = invCounterSetting.value; }
+    const logoSetting = settings.find(s => s.key === 'companyLogo');
+    if (logoSetting && logoSetting.value) {
+      document.getElementById("logoImg").src = logoSetting.value;
+      document.getElementById("logoImg").style.display = "block";
+      document.getElementById("plusIcon").style.display = "none";
+      document.getElementById("recordsLogoImg").src = logoSetting.value;
+      document.getElementById("recordsLogoImg").style.display = "block";
+      document.getElementById("plusSign").style.display = "none";
+    }
+    
+    processSalesForBatchStock();
+    updateStorageInfo();
+    console.log('✅ All data loaded from IndexedDB');
+  } catch (e) { console.error('Error loading from IndexedDB:', e); }
+}
+
+function rebuildBatchStockFromPurchases() {
+  batchStock = [];
+  purchaseRecords.forEach(purchase => {
+    const batchId = `${purchase.code}_${purchase.batch || 'default'}_${purchase.date}`;
+    batchStock.push({
+      batchId, product: purchase.product, code: purchase.code, batch: purchase.batch || 'N/A',
+      rate: parseFloat(purchase.rate), buyRate: parseFloat(purchase.buy),
+      purchaseQty: parseFloat(purchase.qty), soldQty: 0, available: parseFloat(purchase.qty),
+      expiry: purchase.expiry || '-', company: purchase.company || '-', date: purchase.date
+    });
+  });
+  processSalesForBatchStock();
+}
+
+function processSalesForBatchStock() {
+  batchStock.forEach(b => b.soldQty = 0);
+  savedInvoices.forEach(invoice => {
+    if (invoice.type === "sale") {
+      invoice.products.forEach(product => {
+        if (product.batchInfo) {
+          product.batchInfo.forEach(bi => {
+            const batch = batchStock.find(b => b.batchId === bi.batchId);
+            if (batch) { batch.soldQty += bi.qty; }
+          });
+        } else {
+          const remainingQty = product.qty;
+          const productBatches = batchStock.filter(b => b.code === product.code || b.product === product.item)
+            .sort((a, b) => new Date(a.date) - new Date(b.date));
+          let remaining = remainingQty;
+          for (const batch of productBatches) {
+            const available = batch.purchaseQty - batch.soldQty;
+            if (available > 0 && remaining > 0) {
+              const toDeduct = Math.min(available, remaining);
+              batch.soldQty += toDeduct;
+              remaining -= toDeduct;
+            }
+          }
+        }
+      });
+    }
+  });
+  batchStock.forEach(b => { b.available = b.purchaseQty - b.soldQty; });
+}
+
+// ==================== KEYBOARD SHORTCUTS ====================
+document.addEventListener("keydown", function(event) {
+  const activeElement = document.activeElement;
+  const editableFields = ['custId', 'custName', 'custCity', 'custPhone', 'paidAmount'];
+  
+  if (editableFields.includes(activeElement.id) || activeElement === document.getElementById('custName') || 
+      activeElement === document.getElementById('custCity') || activeElement === document.getElementById('custPhone')) {
+    handleArrowNavigation(event, activeElement);
+  }
+  
+  if (event.key === "Escape" || event.keyCode === 27) {
+    const custSugg = document.getElementById("customerSuggestions");
+    const prodSugg = document.getElementById("productSuggestions");
+    const purchSugg = document.getElementById("purchaseSuggestionBox");
+    const compRetSugg = document.getElementById("companyReturnSuggestionBox");
+    
+    if (custSugg.style.display === "block") { custSugg.style.display = "none"; suggestionIndex = -1; return; }
+    if (prodSugg.style.display === "block") { prodSugg.style.display = "none"; suggestionIndex = -1; return; }
+    if (purchSugg.style.display === "block") { purchSugg.style.display = "none"; return; }
+    if (compRetSugg && compRetSugg.style.display === "block") { compRetSugg.style.display = "none"; return; }
+    
+    const visibleSection = document.querySelector('.section[style*="display: block"]');
+    if (visibleSection) {
+      event.preventDefault();
+      if (visibleSection.id === "invoiceSection") closeInvoice();
+      else if (visibleSection.id === "recordsSection") closeRecords();
+      else if (visibleSection.id === "purchaseSection") closePurchase();
+      else if (visibleSection.id === "customerSection") closeCustomer();
+      else if (visibleSection.id === "inventorySection") closeInventory();
+      else if (visibleSection.id === "batchStockSection") closeBatchStock();
+      else if (visibleSection.id === "companyReturnSection") closeCompanyReturn();
+    }
+  }
+  
+  if (event.key === "F4" || event.keyCode === 115) {
+    event.preventDefault();
+    if (document.getElementById("invoiceSection").style.display === "block") { printSaveInvoice(); }
+  }
+  if (event.key === "F2" || event.keyCode === 113) {
+    event.preventDefault();
+    if (document.getElementById("invoiceSection").style.display === "block") { saveInvoice(); }
+  }
+  if (event.key === "F12" || event.keyCode === 123) {
+    event.preventDefault();
+    if (document.getElementById("invoiceSection").style.display === "block") {
+      clearInvoice();
+      showBatchNotification('🧹 Invoice cleared! (F12)', 'info');
+    }
+  }
+  if (event.key === "Enter" && document.activeElement === document.getElementById("btnPrintSave")) {
+    event.preventDefault();
+    printSaveInvoice();
+  }
+});
+
+// ==================== CLOSE SUGGESTIONS ON OUTSIDE CLICK ====================
+document.addEventListener("click", function(event) {
+  if (!event.target.closest("#customerSuggestions") && !event.target.closest("#custId")) {
+    document.getElementById("customerSuggestions").style.display = "none";
+  }
+  if (!event.target.closest("#productSuggestions") && !event.target.closest("#productTable td:nth-child(2)")) {
+    document.getElementById("productSuggestions").style.display = "none";
+  }
+  if (!event.target.closest("#purchaseSuggestionBox") && !event.target.closest("#purchaseProduct")) {
+    document.getElementById("purchaseSuggestionBox").style.display = "none";
+  }
+  if (!event.target.closest("#companyReturnSuggestionBox") && !event.target.closest("#companyReturnProduct")) {
+    document.getElementById("companyReturnSuggestionBox").style.display = "none";
+  }
+});
+
+// ==================== INITIALIZE SYSTEM ====================
+async function initSystem() {
+  try {
+    checkLicenseOnLoad();
+    await openDB();
+    await loadAllDataFromDB();
+    
+    const d = new Date();
+    document.getElementById("invDate").innerText = d.toLocaleDateString("en-GB");
+    document.getElementById("invNo").value = currentInvoiceNumber;
+    currentLoadedInvoice = null;
+    addNewRow();
+    document.getElementById("paidAmount").innerText = "";
+    
+    const today = new Date();
+    const firstDay = new Date(today.getFullYear(), today.getMonth(), 1);
+    document.getElementById("openingDate").value = firstDay.toISOString().split('T')[0];
+    document.getElementById("closingDate").value = today.toISOString().split('T')[0];
+    
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(today.getDate() - 30);
+    document.getElementById("startDate").value = thirtyDaysAgo.toISOString().split('T')[0];
+    document.getElementById("closingDateInv").value = today.toISOString().split('T')[0];
+    document.getElementById("companyReturnDate").value = today.toISOString().split('T')[0];
+    
+    displayCustomers(customerList);
+    updateInventoryData();
+    updateStorageInfo();
+    
+    console.log('✅ System initialized with 6-Month License');
+    showBatchNotification('✅ System ready! Arrow keys navigation enabled.', 'success');
+  } catch (e) {
+    console.error('Initialization error:', e);
+    showBatchNotification('⚠️ Storage initialization error. Please refresh.', 'warning');
+  }
+}
+
+document.addEventListener("DOMContentLoaded", initSystem);
+</script>
+</body>
+</html>
